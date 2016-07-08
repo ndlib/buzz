@@ -15,12 +15,10 @@ ActiveRecord::Schema.define(version: 20160707201728) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "media", force: :cascade do |t|
+  create_table "media_files", force: :cascade do |t|
     t.string "media_type", null: false
-    t.string "file_name",  null: false
-    t.string "wowza_app",  null: false
+    t.string "file_path",  null: false
     t.uuid   "uuid",       null: false
-    t.json   "metadata"
   end
 
 end
