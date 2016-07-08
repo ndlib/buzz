@@ -1,7 +1,11 @@
 class MediaFilesController < ApplicationController
   def create
     media = CreateMediaFile.call(params: save_params)
-    render json: SerializeMediaFile.to_json(media_file: media)
+    if media.valid?
+      render json: SerializeMediaFile.to_json(media_file: media)
+    else
+      render_validation_errors object: media
+    end
   end
 
   def update

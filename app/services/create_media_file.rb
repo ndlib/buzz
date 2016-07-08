@@ -12,10 +12,7 @@ class CreateMediaFile
   def create!
     media = SerializeMediaFile.from_hash(hash: params)
     media.uuid = SecureRandom.uuid
-    if media.save
-      media
-    else
-      false
-    end
+    media.save
+    media
   end
 end

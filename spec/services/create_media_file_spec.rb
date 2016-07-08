@@ -27,10 +27,10 @@ describe CreateMediaFile do
     end
   end
 
-  it "returns false when save fails" do
+  it "returns the new file when save fails" do
     allow(MediaFile).to receive(:new).and_return(media)
     allow(media).to receive(:save).and_return(false)
-    expect(subject).to eq(false)
+    expect(subject).to eq(media)
   end
 
   it "raises an error for an invalid param" do
