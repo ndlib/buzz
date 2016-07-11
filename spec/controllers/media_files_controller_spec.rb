@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe MediaFilesController, type: :controller do
-  let(:media) { instance_double(MediaFile, "uuid=": true, valid?: true, errors: "validation errors") }
+  let(:media) { instance_double(MediaFile, attributes: {}, "uuid=": true, valid?: true, errors: "validation errors") }
 
   before(:each) do
     allow(MediaFile).to receive(:new).and_return(media)
