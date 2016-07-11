@@ -3,7 +3,7 @@ class SerializeMediaFile
     MediaFile.new(hash)
   end
 
-  def self.to_json(media_file:)
-    media_file.to_json(except: :id)
+  def self.to_json(object:)
+    object.to_json(except: :id)
   end
 end

@@ -18,7 +18,7 @@ RSpec.describe MediaFilesController, type: :controller do
     end
 
     it "uses SerializeMediaFile to render the json" do
-      expect(SerializeMediaFile).to receive(:to_json).with(media_file: media)
+      expect(SerializeMediaFile).to receive(:to_json).with(object: media)
       subject
     end
 
@@ -29,8 +29,8 @@ RSpec.describe MediaFilesController, type: :controller do
 
     it "renders errors if the media is invalid" do
       allow(media).to receive(:valid?).and_return(false)
+      expect(SerializeFailedCreateAction).to receive(:to_json).with(object: media, object_serializer: SerializeMediaFile)
       subject
-      expect(response.body).to eq("{\"status\":422,\"errors\":\"validation errors\"}")
     end
   end
 end

@@ -22,11 +22,11 @@ describe SerializeMediaFile do
 
   describe "to_json" do
     it "excludes id" do
-      expect(JSON.parse(SerializeMediaFile.to_json(media_file: media), symbolize_names: true)).not_to include(:"id")
+      expect(JSON.parse(SerializeMediaFile.to_json(object: media), symbolize_names: true)).not_to include(:"id")
     end
 
     it "includes all other attributes" do
-      expect(JSON.parse(SerializeMediaFile.to_json(media_file: media), symbolize_names: true)).to include(:"uuid", :"file_path", :"media_type")
+      expect(JSON.parse(SerializeMediaFile.to_json(object: media), symbolize_names: true)).to include(:"uuid", :"file_path", :"media_type")
     end
   end
 end

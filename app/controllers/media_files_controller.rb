@@ -2,9 +2,10 @@ class MediaFilesController < ApplicationController
   def create
     media = CreateMediaFile.call(params: save_params)
     if media.valid?
-      render json: SerializeMediaFile.to_json(media_file: media)
+      render json: SerializeMediaFile.to_json(object: media)
     else
-      render_validation_errors object: media
+      render json: SerializeFailedCreateAction.to_json(object: media, object_serializer: SerializeMediaFile),
+             status: :unprocessable_entity
     end
   end
 
