@@ -20,13 +20,27 @@ describe SerializeMediaFile do
     end
   end
 
-  describe "to_json" do
+  describe "to_hash" do
+    let(:subject) { SerializeMediaFile.to_hash(object: media) }
+
     it "excludes id" do
-      expect(JSON.parse(SerializeMediaFile.to_json(object: media), symbolize_names: true)).not_to include(:"id")
+      expect(subject).not_to include(:"id")
     end
 
     it "includes all other attributes" do
-      expect(JSON.parse(SerializeMediaFile.to_json(object: media), symbolize_names: true)).to include(:"uuid", :"file_path", :"media_type")
+      expect(subject).to include("uuid", "file_path", "media_type")
+    end
+  end
+
+  describe "to_json" do
+    let(:subject) { JSON.parse(SerializeMediaFile.to_json(object: media), symbolize_names: true) }
+
+    it "excludes id" do
+      expect(subject).not_to include(:"id")
+    end
+
+    it "includes all other attributes" do
+      expect(subject).to include(:"uuid", :"file_path", :"media_type")
     end
   end
 end

@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe MediaFilesController, type: :controller do
-  let(:media) { instance_double(MediaFile, "uuid=": true, valid?: true, errors: "validation errors") }
+  let(:media) { instance_double(MediaFile, attributes: {}, "uuid=": true, valid?: true, errors: "validation errors") }
 
   before(:each) do
     allow(MediaFile).to receive(:new).and_return(media)
@@ -17,8 +17,8 @@ RSpec.describe MediaFilesController, type: :controller do
       subject
     end
 
-    it "uses SerializeMediaFile to render the json" do
-      expect(SerializeMediaFile).to receive(:to_json).with(object: media)
+    it "uses SerializeCompletedCreateAction to render the json" do
+      expect(SerializeCompletedCreateAction).to receive(:to_json).with(object: media, object_serializer: SerializeMediaFile)
       subject
     end
 
