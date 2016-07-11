@@ -17,8 +17,8 @@ RSpec.describe MediaFilesController, type: :controller do
       subject
     end
 
-    it "uses SerializeMediaFile to render the json" do
-      expect(SerializeMediaFile).to receive(:to_json).with(object: media)
+    it "uses SerializeCompletedCreateAction to render the json" do
+      expect(SerializeCompletedCreateAction).to receive(:to_json).with(object: media, object_serializer: SerializeMediaFile)
       subject
     end
 
