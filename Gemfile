@@ -25,15 +25,12 @@ gem 'puma', '~> 3.0'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
-end
-
-group :development do
+  gem "rspec-rails"
+  gem "spring-commands-rspec"
   gem "guard"
-  gem "guard-bundler"
   gem "guard-rails"
   gem "guard-rspec"
   gem "guard-spring"
-  gem "guard-npm"
 
   gem "rubocop"
 end
