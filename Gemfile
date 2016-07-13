@@ -12,6 +12,7 @@ gem "puma", "~> 3.0"
 
 # Use Capistrano for deployment
 gem "capistrano-rails", group: :development
+gem "coveralls", require: false
 
 # Server monitoring
 gem "newrelic_rpm"
