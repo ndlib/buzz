@@ -7,6 +7,7 @@ before_install:
 script:
   - bundle exec rspec spec
 before_script:
+  - cp config/database_example.yml config/database.yml
   - cp config/secrets.example.yml config/secrets.yml
   - psql -c 'create database buzz_test' -U postgres
   - psql -c 'create role root superuser createdb createrole inherit login replication' -U postgres
