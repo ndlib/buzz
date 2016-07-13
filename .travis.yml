@@ -2,8 +2,6 @@ language: ruby
 sudo: false
 rvm:
   - 2.3.1
-before_install:
-
 script:
   - bundle exec rspec spec
 before_script:
@@ -14,8 +12,6 @@ before_script:
   - RAILS_ENV=test bundle exec rake --trace db:migrate test
 cache:
   bundler: true
-  directories:
-
 addons:
   postgresql: "9.4"
 services:
