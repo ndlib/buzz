@@ -1,10 +1,7 @@
 require "rails_helper"
 
 describe CreateBuzzUrl do
-  let(:options) {{
-    host: "test.com",
-    port: "1000"
-  }}
+  let(:options) { {host: "test.com", port: "1000"} }
 
   before(:each) do
     allow(Rails.application.routes).to receive(:default_url_options).and_return(options)
