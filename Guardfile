@@ -5,9 +5,9 @@ hesburgh_guard = HesburghInfrastructure::Guard.new(:buzz, self)
 
 # Spring used for preloading application
 # https://github.com/guard/guard-spring
-hesburgh_guard.spring do
-  # Watch any custom paths
-end
+# hesburgh_guard.spring do
+#   # Watch any custom paths
+# end
 
 hesburgh_guard.rails do
   # Watch any custom paths
