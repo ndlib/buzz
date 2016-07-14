@@ -1,3 +1,6 @@
 languages:
   Ruby: true
-  
+exclude_paths:
+- "Gemfile.lock"
+- "spec/"
+- "vendor/"
