@@ -19,11 +19,11 @@ RSpec.describe MediaFilesController, type: :controller do
     context "when media is valid" do
       let(:media) do
         instance_double(MediaFile,
-                        media_type: "media type",
-                        attributes: {},
+                        "media_type": "media type",
+                        "attributes": {},
                         "uuid=": true,
-                        save: true,
-                        valid?: true)
+                        "save": true,
+                        "valid?": true)
       end
 
       before(:each) do
@@ -45,12 +45,12 @@ RSpec.describe MediaFilesController, type: :controller do
     context "when media is invalid" do
       let(:media) do
         instance_double(MediaFile,
-                        media_type: "media type",
-                        attributes: {},
+                        "media_type": "media type",
+                        "attributes": {},
                         "uuid=": true,
-                        save: false,
-                        valid?: false,
-                        errors: ["validation errors"])
+                        "save": false,
+                        "valid?": false,
+                        "errors": ["validation errors"])
       end
 
       before(:each) do
@@ -75,11 +75,11 @@ RSpec.describe MediaFilesController, type: :controller do
     let(:params) { {id: "1", media_file: {file_path: "file path", media_type: "media type"}} }
     let(:media) do
       instance_double(MediaFile,
-                      media_type: "media type",
-                      attributes: {},
+                      "media_type": "media type",
+                      "attributes": {},
                       "attributes=": true,
-                      valid?: true,
-                      save: true)
+                      "valid?": true,
+                      "save": true)
     end
 
     before(:each) do
@@ -99,12 +99,12 @@ RSpec.describe MediaFilesController, type: :controller do
     context "when media is valid" do
       let(:media) do
         instance_double(MediaFile,
-                        media_type: "media type",
-                        attributes: {},
+                        "media_type": "media type",
+                        "attributes": {},
                         "attributes=": true,
                         "uuid=": true,
-                        save: true,
-                        valid?: true)
+                        "save": true,
+                        "valid?": true)
       end
 
       before(:each) do
@@ -126,13 +126,13 @@ RSpec.describe MediaFilesController, type: :controller do
     context "when media is invalid" do
       let(:media) do
         instance_double(MediaFile,
-                        media_type: "media type",
-                        attributes: {},
+                        "media_type": "media type",
+                        "attributes": {},
                         "attributes=": true,
                         "uuid=": true,
-                        save: false,
-                        valid?: false,
-                        errors: ["validation errors"])
+                        "save": false,
+                        "valid?": false,
+                        "errors": ["validation errors"])
       end
 
       before(:each) do
@@ -157,11 +157,11 @@ RSpec.describe MediaFilesController, type: :controller do
     let(:params) { {id: "1"} }
     let(:media) do
       instance_double(MediaFile,
-                      media_type: "media type",
-                      attributes: {},
+                      "media_type": "media type",
+                      "attributes": {},
                       "attributes=": true,
-                      valid?: true,
-                      save: true)
+                      "valid?": true,
+                      "save": true)
     end
 
     it "uses QueryMediaFile to find the object" do

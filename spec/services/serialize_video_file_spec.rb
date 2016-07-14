@@ -20,7 +20,7 @@ describe SerializeVideoFile do
       :name => "file path",
       :thumbnailUrl => "https://test.host/video.jpg",
       :uploadDate => nil,
-      :embedUrl =>"https://test.host/?id=87ea8e9c-5932-478e-95d8-aeb04888a89a",
+      :embedUrl => "https://test.host/?id=87ea8e9c-5932-478e-95d8-aeb04888a89a",
       :contentUrl => [
         "http://wowza.library.nd.edu:1935/buzz_wow/_definst_/mp3:amazons3/buzz-bucket.library.nd.edu/file path/playlist.m3u8",
         "rtmp://wowza.library.nd.edu:1935/buzz_wow/_definst_/mp3:amazons3/buzz-bucket.library.nd.edu/file path"

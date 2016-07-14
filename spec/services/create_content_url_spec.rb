@@ -20,13 +20,13 @@ describe CreateContentUrl do
     let(:object) { instance_double(MediaFile, media_type: "video", file_path: "file-path") }
 
     it "renders the correct http url" do
-      expect(CreateContentUrl.http(object: object))
-        .to eq("http://wowza-test.com:1000/wowie/instance/mp4:source-prefix/source/file-path/playlist.m3u8")
+      url = "http://wowza-test.com:1000/wowie/instance/mp4:source-prefix/source/file-path/playlist.m3u8"
+      expect(CreateContentUrl.http(object: object)).to eq(url)
     end
 
     it "renders the correct rtmp url" do
-      expect(CreateContentUrl.rtmp(object: object))
-        .to eq("rtmp://wowza-test.com:1000/wowie/instance/mp4:source-prefix/source/file-path")
+      url = "rtmp://wowza-test.com:1000/wowie/instance/mp4:source-prefix/source/file-path"
+      expect(CreateContentUrl.rtmp(object: object)).to eq(url)
     end
   end
 
@@ -34,13 +34,13 @@ describe CreateContentUrl do
     let(:object) { instance_double(MediaFile, media_type: "audio", file_path: "file-path") }
 
     it "renders the correct http url" do
-      expect(CreateContentUrl.http(object: object))
-        .to eq("http://wowza-test.com:1000/wowie/instance/mp3:source-prefix/source/file-path/playlist.m3u8")
+      url = "http://wowza-test.com:1000/wowie/instance/mp3:source-prefix/source/file-path/playlist.m3u8"
+      expect(CreateContentUrl.http(object: object)).to eq(url)
     end
 
     it "renders the correct rtmp url" do
-      expect(CreateContentUrl.rtmp(object: object))
-        .to eq("rtmp://wowza-test.com:1000/wowie/instance/mp3:source-prefix/source/file-path")
+      url = "rtmp://wowza-test.com:1000/wowie/instance/mp3:source-prefix/source/file-path"
+      expect(CreateContentUrl.rtmp(object: object)).to eq(url)
     end
   end
 end
