@@ -12,7 +12,6 @@ describe CreateContentUrl do
 
   before(:each) do
     allow(Rails.configuration.settings).to receive(:wowza).and_return(wowza_settings)
-    #Rails.configuration.settings.wowza = wowza_settings
   end
 
   context "when given a video file" do
