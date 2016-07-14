@@ -1,8 +1,8 @@
 require "rails_helper"
 
 describe SerializeUnknownTypeFile do
-  let(:params) { { media_type: "media type" } }
-  let(:attributes) { { "id" => 1, "uuid" => "87ea8e9c-5932-478e-95d8-aeb04888a89a", "media_type" => "media type", "file_path" => "file path" } }
+  let(:params) {{ media_type: "media type" }}
+  let(:attributes) {{ "id" => 1, "uuid" => "87ea8e9c-5932-478e-95d8-aeb04888a89a", "media_type" => "media type", "file_path" => "file path" }}
   let(:media) { MediaFile.new(attributes) }
 
   describe "to_hash" do
