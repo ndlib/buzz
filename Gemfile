@@ -24,6 +24,7 @@ group :development, :test do
   gem "guard"
   gem "guard-rails"
   gem "guard-rspec"
+  gem "guard-zeus"
 
   gem "rubocop"
 end
