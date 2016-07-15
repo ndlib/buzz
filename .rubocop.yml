@@ -33,8 +33,8 @@ Style/SymbolArray:
 
 # Most readable form.
 Style/AlignHash:
-  EnforcedHashRocketStyle: table
-  EnforcedColonStyle: table
+  EnforcedHashRocketStyle: key
+  EnforcedColonStyle: key
 
 # Mixing the styles looks just silly.
 Style/HashSyntax:
@@ -134,4 +134,7 @@ Lint/Debugger:
 
 # Style preference
 Style/MethodDefParentheses:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
   Enabled: false

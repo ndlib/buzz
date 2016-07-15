@@ -21,6 +21,12 @@ class MediaFilesController < ApplicationController
     end
   end
 
+  def show
+    media = QueryMediaFile.find(uuid: params[:id])
+    render json: SerializeMediaFile.to_json(object: media),
+           status: :ok
+  end
+
   def destroy
   end
 

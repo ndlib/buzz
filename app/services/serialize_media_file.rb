@@ -4,7 +4,15 @@ class SerializeMediaFile
   end
 
   def self.to_hash(object:)
-    object.attributes.except("id")
+    type = object.media_type.present? ? object.media_type.downcase : ""
+    case type
+    when "video"
+      SerializeVideoFile.to_hash(object: object)
+    when "audio"
+      SerializeAudioFile.to_hash(object: object)
+    else
+      SerializeUnknownTypeFile.to_hash(object: object)
+    end
   end
 
   def self.to_json(object:)
