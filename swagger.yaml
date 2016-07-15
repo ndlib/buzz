@@ -1,0 +1,189 @@
+
+swagger: "2.0"
+info:
+  title: Buzz API
+  description: Multimedia streaming API
+  version: "1.0.0"
+host: buzz.library.nd.edu
+schemes:
+  - http
+basePath: /v1
+produces:
+  - application/json
+paths:
+  /mediafiles/:
+    post:
+      summary: Create Video or Audio file
+      description: |
+        Create a multimedia item in Buzz.
+      parameters:
+        - name: value
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateRequest'
+      responses:
+        200:
+          description: A JSON object of the requested media item.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/CreateResponse'
+        422:
+          description: Unprocessable Create
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/UnprocessableCreate'
+        default:
+          description: Unexpected error
+    put:
+      summary: Update Video or Audio file
+      description: |
+        Update a multimedia item in Buzz.
+      parameters:
+        - name: value
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateRequest'
+      responses:
+        200:
+          description: A JSON object of the requested media item.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/UpdateResponse'
+        422:
+          description: Unprocessable Update
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/UnprocessableUpdate'
+        default:
+          description: Unexpected error
+    get:
+      summary: Get Video or Audio file
+      description: |
+        Get a multimedia item in Buzz.
+      parameters:
+        - name: id
+          in: query
+          required: true
+          type: string
+      responses:
+        200:
+          description: A JSON object of the requested media item.
+          schema:
+            type: object
+            items:
+              $ref: '#/definitions/MediaFile'
+        default:
+          description: Unexpected error
+
+definitions:
+  CreateRequest:
+    type: object
+    properties:
+      file_path:
+        type: string
+        description: Name and path of the media file
+      media_type:
+        type: string
+        description: Video or Audio
+      thumbnailUrl:
+        type: string
+        description: Url to th original iamge
+  CreateResponse:
+    type: object
+    properties:
+      "@context":
+        type: string
+        description: http://schema.org
+      "@type":
+        type: string
+        description: CreateAction
+      actionStatus:
+        type: string
+        description: CompletedActionStatus.
+      object:
+        $ref: '#/definitions/MediaFile'
+  UpdateResponse:
+    type: object
+    properties:
+      "@context":
+        type: string
+        description: http://schema.org
+      "@type":
+        type: string
+        description: UpdateAction
+      actionStatus:
+        type: string
+        description: CompletedActionStatus.
+      object:
+        $ref: '#/definitions/MediaFile'
+  UnprocessableCreate:
+    type: object
+    description: Error
+    properties:
+      "@context":
+        type: string
+        description: http://schema.org context
+      "@type":
+        type: string
+        description: CreateAction
+      actionStatus:
+        type: string
+        description: FailedActionStatus
+      object:
+        $ref: '#/definitions/MediaFile'
+  UnprocessableUpdate:
+    type: object
+    description: Error
+    properties:
+      "@context":
+        type: string
+        description: http://schema.org context
+      "@type":
+        type: string
+        description: UpdateAction
+      actionStatus:
+        type: string
+        description: FailedActionStatus
+      object:
+        $ref: '#/definitions/MediaFile'
+  MediaFile:
+    type: object
+    description: The media object.
+    properties:
+      "@context":
+        type: string
+        description: http://schema.org
+      "@type":
+        type: string
+        description: AudioObject or VideoObject
+      "@id":
+        type: string
+        description: Unique id
+      description:
+        type: string
+        description: Filepath and Filename
+      name:
+        type: string
+        description: Filename
+      thumbnailUrl:
+        type: string
+        description: Url of thumbnail image.
+      uploadDate:
+        type: string
+        format: date-time
+        description: Date and time file was uploaded.
+      embedUrl:
+        type: string
+        description: The url that can be embedded into an iFrame to display the media player
+      contentUrl:
+        type: array
+        items:
+          type: string
+          description: Url to media stream. Either HLS or RTMP.
+  
