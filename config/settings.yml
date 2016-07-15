@@ -1,0 +1,28 @@
+# Store non-sensitive configuration settings here.  Acessible from Rails.configuration.settings
+defaults: &defaults
+  wowza:
+    host: wowza.library.nd.edu
+    port: 1935
+    application: buzz_wow
+    instance: _definst_
+    cache_source_prefix: amazons3
+    cache_source: buzz-bucket.library.nd.edu
+
+
+local: &local
+  <<: *defaults
+
+deploy: &deploy
+  <<: *defaults
+
+development:
+  <<: *local
+
+test:
+  <<: *local
+
+pre_production:
+  <<: *deploy
+
+production:
+  <<: *deploy
