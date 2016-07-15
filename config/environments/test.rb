@@ -42,5 +42,6 @@ Rails.application.configure do
 
   Rails.application.routes.default_url_options = {
     host: "test.host",
+    protocol: "http"
   }
 end
