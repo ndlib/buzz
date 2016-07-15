@@ -35,7 +35,6 @@ function getMediaByUID(id) {
  *
  */
 function setupPlayer(media) {
-  console.log(media)
   var playerInstance = jwplayer("mediaPlayer");
   playerInstance.setup({
     playlist: [{
@@ -62,6 +61,5 @@ if(!window.location.search) {
 
 } else if(window.location.search) {
   var uid = window.location.search.replace("?id=", "");
-  console.log(uid);
   getMediaByUID(uid);
 }
