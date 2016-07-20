@@ -15,9 +15,13 @@ function getParams(searchString){
  *
  */
 function getParam(needle, haystack) {
-  return haystack.filter(function(h) {
+  var found = haystack.filter(function(h) {
     return h.id === needle;
-  })[0].value;
+  });
+  if(found && found[0]) {
+    return found[0].value;
+  }
+  return null;
 }
 
 /*
