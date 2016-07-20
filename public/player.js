@@ -1,11 +1,33 @@
 /*
+ * Create an array of parameter objects from a given searchString.
+ *
+ */
+function getParams(searchString){
+  return searchString.replace('?', '').split('&').map(function(paramString) {
+    var param = paramString.split('=');
+    return { id: param[0], value: param[1] };
+  });
+}
+
+/*
+ * Find a specific parameter by id in an array of parameters and return its
+ * value.
+ *
+ */
+function getParam(needle, haystack) {
+  return haystack.filter(function(h) {
+    return h.id === needle;
+  })[0].value;
+}
+
+/*
  * Perform an AJAX request to the server looking for media associated with :id.
  * If media is found, then call setupPlayer() to init the player.
  * Otherwise fail with a console.log message.
  *
  */
-function getMediaByUID(id) {
-
+function getMediaBy(params) {
+  var id = getParam('id', params);
   var request = new XMLHttpRequest();
   request.open('GET', '/v1/media_files/' + id, true);
 
@@ -13,7 +35,7 @@ function getMediaByUID(id) {
     if (request.status >= 200 && request.status < 400) {
       // Success!
       var data = JSON.parse(request.responseText);
-      setupPlayer(data);
+      setupPlayer(data, params);
     } else {
       // We reached our target server, but it returned an error
       console.log("No media available with uid " + id + ".");
@@ -34,9 +56,10 @@ function getMediaByUID(id) {
  * Setup a jwPlayer media player using the specified :media.
  *
  */
-function setupPlayer(media) {
+function setupPlayer(media, params) {
   var playerInstance = jwplayer("mediaPlayer");
   playerInstance.setup({
+    autostart: getParam('autostart', params),
     playlist: [{
       image: media.thumbnailUrl,
       title: media.name,
@@ -46,6 +69,7 @@ function setupPlayer(media) {
         file: media.contentUrl[0] // Apple HLS
       }]
     }],
+    primary: 'html5',
   });
 }
 
@@ -60,6 +84,6 @@ if(!window.location.search) {
   console.log("No media was specifed in the URL");
 
 } else if(window.location.search) {
-  var uid = window.location.search.replace("?id=", "");
-  getMediaByUID(uid);
+  var params = getParams(window.location.search);
+  getMediaBy(params);
 }
