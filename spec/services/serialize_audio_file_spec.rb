@@ -7,7 +7,8 @@ describe SerializeAudioFile do
       "id" => 1,
       "uuid" => "87ea8e9c-5932-478e-95d8-aeb04888a89a",
       "media_type" => "media type",
-      "file_path" => "file path"
+      "file_path" => "file path",
+      "thumbnail_url" => "http://test.host/audio.jpg"
     }
   end
   let(:media) { MediaFile.new(attributes) }

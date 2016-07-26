@@ -10,17 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160713133918) do
+ActiveRecord::Schema.define(version: 20160720202812) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "media_files", force: :cascade do |t|
-    t.string   "media_type", null: false
-    t.string   "file_path",  null: false
-    t.uuid     "uuid",       null: false
+    t.string   "media_type",    null: false
+    t.string   "file_path",     null: false
+    t.uuid     "uuid",          null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "thumbnail_url"
   end
 
 end
