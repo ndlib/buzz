@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe MediaFilesController, type: :controller do
   describe "create" do
     let(:subject) { post :create, params: params }
-    let(:params) { {media_file: {file_path: "file path", media_type: "media type"}} }
+    let(:params) { {media_file: {file_path: "file path", media_type: "media type", thumbnail_url: "http://test.host/video.jpg"}} }
     let(:media) { instance_double(MediaFile, media_type: "media type", attributes: {}, valid?: true) }
 
     it "throws an exception if the media_file parameter is missing" do
@@ -72,7 +72,7 @@ RSpec.describe MediaFilesController, type: :controller do
 
   describe "update" do
     let(:subject) { put :update, params: params }
-    let(:params) { {id: "1", media_file: {file_path: "file path", media_type: "media type"}} }
+    let(:params) { {id: "1", media_file: {file_path: "file path", media_type: "media type", thumbnail_url: "http://test.host/video.jpg"}} }
     let(:media) do
       instance_double(MediaFile,
                       "media_type": "media type",

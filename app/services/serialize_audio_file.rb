@@ -6,7 +6,7 @@ class SerializeAudioFile
       "@id": object.uuid,
       "description": object.file_path,
       "name": object.file_path,
-      "thumbnailUrl": CreateBuzzUrl.call("audio.jpg"),
+      "thumbnailUrl": object.thumbnail_url,
       "uploadDate": object.updated_at,
       "embedUrl": CreateBuzzUrl.call("?id=#{object.uuid}"),
       "contentUrl": [

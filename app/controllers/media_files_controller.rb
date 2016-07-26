@@ -37,6 +37,6 @@ class MediaFilesController < ApplicationController
   end
 
   def update_params
-    params.require(:media_file).permit()
+    params.require(:media_file).permit
   end
 end
