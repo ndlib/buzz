@@ -173,7 +173,7 @@ RSpec.describe MediaFilesController, type: :controller do
 
   describe "show" do
     let(:subject) { get :show, params: params }
-    let(:params) { { id: "1" } }
+    let(:params) { {id: "1"} }
     let(:media) do
       instance_double(MediaFile,
                       "media_type": "media type",
