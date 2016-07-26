@@ -9,6 +9,11 @@ RSpec.describe MediaFile do
     expect(subject).to have(1).errors_on(:uuid)
   end
 
+  it "accepts thumbnail_url" do
+    subject.thumbnail_url = "http://test.host/video.jpg"
+    expect(subject).to have(0).errors_on(:thumbnail_url)
+  end
+
   describe "media_type validator" do
     it "requires a value" do
       expect(subject).to have(1).errors_on(:media_type)
