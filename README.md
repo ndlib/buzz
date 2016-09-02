@@ -1,24 +1,30 @@
-# README
+# Buzz README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Dependencies
+Requires ruby v2.3.1
 
-Things you may want to cover:
+## Installation Notes
 
-* Ruby version
+```console
+$ bundle install
+```
 
-* System dependencies
+Generate a secrets file or use the example
+```console
+$ cp config/secrets.example.yml config/secrets.yml
+```
 
-* Configuration
+Generate a database.yml or use the example
+```console
+$ cp config/database_example.yml config/database.yml
+```
 
-* Database creation
+Create the database
+```console
+$ bundle exec rake db:create && bundle exec rake db:schema:load
+```
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## Running
+```console
+$ bundle exec rails server
+```
