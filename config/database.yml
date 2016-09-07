@@ -27,7 +27,7 @@ pre_production:
   <<: *pg_settings
   username: <%= ENV["RDS_USERNAME"] %>
   password: <%= ENV["RDS_PASSWORD"] %>
-  host:     <%= ENV["RDS_HOST"] %>
+  host:     <%= ENV["RDS_HOSTNAME"] %>
   database: <%= ENV["RDS_DB_NAME"] %>
   port:     <%= ENV["RDS_PORT"] %>
 
@@ -35,6 +35,6 @@ production:
   <<: *pg_settings
   username: <%= ENV["RDS_USERNAME"] %>
   password: <%= ENV["RDS_PASSWORD"] %>
-  host:     <%= ENV["RDS_HOST"] %>
+  host:     <%= ENV["RDS_HOSTNAME"] %>
   database: <%= ENV["RDS_DB_NAME"] %>
   port:     <%= ENV["RDS_PORT"] %>
