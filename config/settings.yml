@@ -23,6 +23,8 @@ test:
 
 pre_production:
   <<: *deploy
+  wowza:
+    cache_source: testlibnd-wse-honeycomb-pprd
 
 production:
   <<: *deploy
