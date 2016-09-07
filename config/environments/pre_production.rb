@@ -77,7 +77,7 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   Rails.application.routes.default_url_options = {
-    host: "buzz.library.nd.edu",
-    protocol: "https"
+    host: "buzz-pprd-test.caqt4wpy6k.us-east-1.elasticbeanstalk.com",
+    protocol: "http"
   }
 end
