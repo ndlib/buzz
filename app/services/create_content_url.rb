@@ -16,7 +16,7 @@ class CreateContentUrl
   private
 
   def self.prefix(object:)
-    if object.media_type.downcase == "video"
+    if object.media_type.downcase == "video" || File.extname(object.file_path) == ".m4a"
       "mp4"
     else
       "mp3"
