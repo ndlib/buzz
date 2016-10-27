@@ -9,14 +9,36 @@ Requires ruby v2.3.1
 $ bundle install
 ```
 
-Generate a secrets file or use the example
-```console
-$ cp config/secrets.example.yml config/secrets.yml
+Generate a config/settings.yml with the following keys:
+```
+<rails environment>
+  wowza:
+    host: <host>
+    port: <port>
+    application: <wowza app name>
+    instance: <wowza instance>
+    cache_source_prefix: amazons3
+    cache_source: <s3 bucket name>
+``` 
+
+Generate a config/secrets.yml with the following keys:
+```
+<rails environment>
+  secret_key_base: <secret key>
 ```
 
-Generate a database.yml or use the example
-```console
-$ cp config/database_example.yml config/database.yml
+Generate a config/database.yml with the following keys:
+```
+<rails environment>
+  adapter: postgresql
+  encoding: utf8
+  reconnect: true
+  pool: 5
+  username: <db user>
+  password: <db pass>
+  host:     <db host>
+  database: <db name>
+  port:     <db port>
 ```
 
 Create the database
