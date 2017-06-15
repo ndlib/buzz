@@ -3,7 +3,9 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - echo Build started...
+      - echo Installing prereqs...
+      - yum -y install git
+      - gem install bundler
   build:
     commands:
       - echo Building...
