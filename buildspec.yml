@@ -1,18 +1,13 @@
+---
 version: 0.2
 
 phases:
-  pre_build:
+  install:
     commands:
-      - echo Installing prereqs...
-      - yum -y install git
       - gem install bundler
   build:
     commands:
-      - echo Building...
       - bundle install --deployment
-  post_build:
-    commands:
-      - echo Build completed on `date`
 artifacts:
-  files:
-    - '**/*'
+  files: ['**/*']
+...
