@@ -34,9 +34,9 @@ pre_production:
 production:
   <<: *deploy
   wowza:
-    host: <%= ENV["WOWZA_HOSTNAME"] %>
-    port: <%= ENV["WOWZA_PORT"] %>
-    application: <%= ENV["WOWZA_APPLICATION"] %>
+    host: wowza.library.nd.edu
+    port: 1935
+    application: buzz_wow
     instance: _definst_
-    cache_source_prefix: <%= ENV["WOWZA_CACHE_SOURCE_PREFIX"] %>
-    cache_source: <%= ENV["WOWZA_CACHE_SOURCE"] %>
+    cache_source_prefix: amazons3
+    cache_source: honeycomb-media-wse-library-nd-edu
