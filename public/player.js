@@ -66,7 +66,6 @@ function setupPlayer(media, params) {
     autostart: getParam('autostart', params),
     playlist: [{
       image: media.thumbnailUrl,
-      title: media.name,
       sources: [{
         file: media.contentUrl[1] // RTMP
       },{
