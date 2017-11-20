@@ -1,0 +1,14 @@
+---
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - yum -y install git
+      - gem install bundler
+  build:
+    commands:
+      - bundle install --deployment
+artifacts:
+  files: ['**/*']
+...

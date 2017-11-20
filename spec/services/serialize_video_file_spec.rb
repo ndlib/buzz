@@ -23,8 +23,8 @@ describe SerializeVideoFile do
       :uploadDate => nil,
       :embedUrl => "http://test.host/?id=87ea8e9c-5932-478e-95d8-aeb04888a89a",
       :contentUrl => [
-        "http://wowza.library.nd.edu:1935/buzz_wow/_definst_/mp3:amazons3/buzz-bucket.library.nd.edu/file path/playlist.m3u8",
-        "rtmp://wowza.library.nd.edu:1935/buzz_wow/_definst_/mp3:amazons3/buzz-bucket.library.nd.edu/file path"
+        "https://wowza.library.nd.edu:443/buzz_wow/_definst_/mp3:amazons3/testlibnd-wse-honeycomb-pprd/file path/playlist.m3u8",
+        "rtmps://wowza.library.nd.edu:443/buzz_wow/_definst_/mp3:amazons3/testlibnd-wse-honeycomb-pprd/file path"
       ],
       :url => "http://test.host/v1/media_files/87ea8e9c-5932-478e-95d8-aeb04888a89a"
     }

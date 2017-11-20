@@ -38,3 +38,4 @@ production:
   host:     <%= ENV["RDS_HOSTNAME"] %>
   database: <%= ENV["RDS_DB_NAME"] %>
   port:     <%= ENV["RDS_PORT"] %>
+  sslmode: require

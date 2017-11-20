@@ -2,11 +2,12 @@
 defaults: &defaults
   wowza:
     host: wowza.library.nd.edu
-    port: 1935
+    port: 443
     application: buzz_wow
     instance: _definst_
     cache_source_prefix: amazons3
-    cache_source: buzz-bucket.library.nd.edu
+    cache_source: testlibnd-wse-honeycomb-pprd
+    #cache_source: honeycomb-media-wse-library-nd-edu
 
 local: &local
   <<: *defaults
@@ -24,18 +25,18 @@ pre_production:
   <<: *deploy
   wowza:
     host: wowza.library.nd.edu
-    port: 1935
+    port: 443
     application: buzz_wow
     instance: _definst_
-    cache_source_prefix: amazons3    
+    cache_source_prefix: amazons3
     cache_source: testlibnd-wse-honeycomb-pprd
 
 production:
   <<: *deploy
   wowza:
     host: wowza.library.nd.edu
-    port: 1935
+    port: 443
     application: buzz_wow
     instance: _definst_
     cache_source_prefix: amazons3
-    cache_source: honeycomb-media-library-nd-edu
+    cache_source: honeycomb-media-wse-library-nd-edu
