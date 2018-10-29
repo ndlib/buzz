@@ -1,0 +1,27 @@
+# docker-compose build
+# docker-compose up
+version: '3.2'
+services:
+  rails:
+    depends_on:
+      - db_dev
+    environment:
+      RDS_USERNAME: root
+      RDS_PASSWORD: password
+      RDS_HOSTNAME: db_dev
+      RDS_PORT: 5432
+      RDS_DB_NAME: buzz_development
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - target: 3000
+        published: 3000
+        protocol: tcp
+        mode: host
+  db_dev:
+    image: "postgres:latest"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: buzz_development
