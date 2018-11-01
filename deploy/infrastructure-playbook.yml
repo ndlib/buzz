@@ -1,0 +1,38 @@
+---
+- name: Deploy Buzz infrastructure build using Cloudformation
+  hosts:
+    - buzz-prep-oregon
+  connection: local
+  gather_facts: false
+  become: false
+  vars:
+    template: files/app-infrastructure.yml
+    template_parameters:
+      VPCID: '{{ vpc_id }}'
+      AuthServicePort: '{{ service_port }}'
+      EnvironmentName: '{{ tagEnvironment }}'
+      DomainName : '{{ DomainName }}'
+      NameTag: '{{ tagName }}-{{ tagEnvironment }}'
+      OwnerTag: '{{ tagOwner }}'
+      ContactTag: '{{ tagContact }}'
+    stack_tags:
+      Name: '{{ tagName }}-app-infrastructure'
+      Owner: '{{ tagOwner }}'
+      Contact: '{{ tagContact }}'
+      Description: '{{ tagDescription }}'
+      Service: '{{ tagService }}'
+      FQDN: '{{ host }}'
+# Libnd Instance Profile
+#      IamInstanceProfile: 'iam-BasicInstanceProfile-1WT0D3FLL2TQV'
+# Testlibnd Instance Profile
+#      IamInstanceProfile: 'iam-BasicInstanceProfile-17NSUPONCJXZL'
+  tasks:
+    - name: Launch application infrastructure Cloud Formation
+      cloudformation:
+        state: present
+        template: '{{ template }}'
+        stack_name: '{{ tagService }}-app-infrastructure'
+        template_parameters: '{{ template_parameters }}'
+        tags: '{{ stack_tags }}'
+      register: aws_cf_stack
+

@@ -1,0 +1,46 @@
+---
+- name: Deploy Buzz infrastructure build using Cloudformation
+  hosts:
+    - buzz-prep-oregon
+    - buzz-prod-oregon
+  connection: local
+  gather_facts: false
+  become: false
+  vars:
+    template: files/service.yml
+    template_parameters:
+      AppEnvPath: '{{ AppEnvPath }}'
+      ContactTag: '{{ tagContact }}'
+      ContainerCpu: '{{ ContainerCPU }}'
+      ContainerMemory: '{{ ContainerMemory }}'
+      DesiredCount: '{{ DesiredCount }}'
+      ImageUrl: '{{ ImageURL }}'
+      InfrastructureStackName: '{{ tagService }}-app-infrastructure'
+      NameTag: '{{ tagName }}-{{ tagEnvironment }}'
+      OwnerTag: '{{ tagOwner }}'
+      Path: '{{ lb_path }}'
+      Priority: '{{ lb_route_priority }}'
+      PrivateSubnet1ID: '{{ private_subnet1 }}'
+      PrivateSubnet2ID: '{{ private_subnet2 }}'
+      PublicSubnet1ID: '{{ public_subnet1 }}'
+      PublicSubnet2ID: '{{ public_subnet2 }}'
+      VPCID: '{{ vpc_id }}'
+    stack_tags:
+      Name: '{{ tagName }}-{{ tagEnvironment }}'
+      Owner: '{{ tagOwner }}'
+      Contact: '{{ tagContact }}'
+      Description: '{{ tagDescription }}'
+      Service: '{{ tagService }}'
+      FQDN: '{{ host }}'
+      TemplateSource: 'https://github.com:{{ repository }}/deploy/files/{{ template }}'
+      ProjectName: '{{ tagName }}'
+      TemplateVersion: 'Some_version_determined_later'
+  tasks:
+    - name: Launch application infrastructure Cloud Formation
+      cloudformation:
+        state: present
+        template: '{{ template }}'
+        stack_name: '{{ tagService }}-service-{{ tagEnvironment }}'
+        template_parameters: '{{ template_parameters }}'
+        tags: '{{ stack_tags }}'
+

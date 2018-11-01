@@ -1,0 +1,38 @@
+---
+- name: Deploy Buzz pipeline build using CloudFormation
+  hosts:
+    - buzz-prep
+  connection: local
+  gather_facts: false
+  become: false
+  vars:
+    template: files/service.yml
+    template_parameters:
+      Approvers: '{{ Approvers }}'
+      CDBranchName: '{{ CDBranchName }}'
+      ContactTag: '{{ tagContact }}'
+      InfrastructureStackName: '{{ tagService }}-app-infrastructure'
+      NameTag: '{{ tagName }}'
+      OAuth: '{{ OAuth }}'
+      OwnerTag: '{{ tagOwner }}'
+      Path: '{{ lb_path }}'
+      ProdServiceStackName: '{{ tagService }}-service-prod'
+      TestServiceStackName: '{{ tagService }}-service-prep'
+      TestUrl: 
+    stack_tags:
+      Name: '{{ tagName }}'
+      Owner: '{{ tagOwner }}'
+      Contact: '{{ tagContact }}'
+      Description: '{{ tagDescription }}'
+      Service: '{{ tagService }}'
+      FQDN: '{{ host }}'
+  tasks:
+    - name: Launch application infrastructure Cloud Formation
+      cloudformation:
+        state: present
+        template: '{{ template }}'
+        stack_name: '{{ tagService }}-service'
+        template_parameters: '{{ template_parameters }}'
+        tags: '{{ stack_tags }}'
+      register: aws_cf_stack
+

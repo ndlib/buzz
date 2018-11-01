@@ -1,0 +1,35 @@
+---
+# Tag variables - used for all CloudFormations
+tagName: testlibnd-buzz
+tagContact: lib-esu-group@nd.edu
+tagDescription: 'Buzz application - prod'
+tagEnvironment: prod
+tagOwner: hanstra
+tagService: "buzz"
+tagBackup: True
+# Infrastructure variables
+vpc_id: vpc-07ee54d622c5c8d47
+host: buzz-prod.library.nd.edu
+service_port: 80
+DomainName: '*.library.nd.edu'
+# Service variables
+AppEnvPath: all/buzz/production
+ContainerCPU: 256
+ContainerMemory: 512
+DesiredCount: 1
+ImageURL: 230391840102.dkr.ecr.us-east-1.amazonaws.com/vicer-amazo-tz6qgxvnqbdq:latest
+lb_path: '*'
+lb_route_priority: 1
+repository: /ndlib/buzz
+template: service.yml
+# Subnets - specific to US-West-1 (Oregon)
+private_subnet1: subnet-0c9bf404af7084f0a
+private_subnet2: subnet-0296ce94fcb425673
+public_subnet1: subnet-0cc5aae8fd96cbb8b
+public_subnet2: subnet-0134c4c2fbf3a608a
+# Service Pipeline variables
+Approvers: hanstra@nd.edu
+CDBranchName: master
+OAuth: '****'
+
+...
