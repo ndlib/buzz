@@ -29,6 +29,6 @@ docker run -p 80:80 --env PORT=80 \
   --env AWS_SECURITY_TOKEN=$AWS_SECURITY_TOKEN \
   --env AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN \
   --env AWS_REGION=$AWS_REGION \
-  --env ENV_SSM_PATH=all/buzz/prod \
+  --env ENV_SSM_PATH=all/buzz/production \
   -it buzz
 ```

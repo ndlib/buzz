@@ -1,6 +1,7 @@
 FROM ruby:2.4.4
 
 RUN apt-get update -qq && apt-get install -y build-essential
+RUN apt-get install -y postgresql
 
 # Install chamber to get secrets from parameter store
 RUN curl https://github.com/segmentio/chamber/releases/download/v2.2.0/chamber_v2.2.0_amd64.deb --output chamber.deb -L
@@ -8,7 +9,7 @@ RUN dpkg -i chamber.deb
 # We are just using the account's default ssm key to encrypt the values
 # If this changes, we'll need to override this alias
 ENV CHAMBER_KMS_KEY_ALIAS=aws/ssm
-ARG DEFAULT_ENV_SSM_PATH="all/buzz/prod"
+ARG DEFAULT_ENV_SSM_PATH="all/buzz/prep"
 ENV ENV_SSM_PATH=$DEFAULT_ENV_SSM_PATH
 
 ENV APP_HOME /app_root
@@ -32,7 +33,7 @@ COPY . $APP_HOME
 WORKDIR $APP_HOME
 
 
-ENV RAILS_ENV=production
+ENV RAILS_ENV=pre_production
 ARG DEFAULT_PORT="80"
 ENV PORT=$DEFAULT_PORT
 EXPOSE $PORT
