@@ -17,7 +17,8 @@ AppEnvPath: all/buzz/production
 ContainerCPU: 256
 ContainerMemory: 512
 DesiredCount: 1
-ImageURL: 230391840102.dkr.ecr.us-east-1.amazonaws.com/vicer-amazo-tz6qgxvnqbdq:latest
+#ImageURL: 230391840102.dkr.ecr.us-east-1.amazonaws.com/vicer-amazo-tz6qgxvnqbdq:latest
+ImageURL: ndlib/ecs_placeholder:unencrypted
 lb_path: '*'
 lb_route_priority: 1
 repository: /ndlib/buzz
@@ -30,6 +31,5 @@ public_subnet2: subnet-0134c4c2fbf3a608a
 # Service Pipeline variables
 Approvers: hanstra@nd.edu
 CDBranchName: master
-OAuth: '****'
 
 ...
