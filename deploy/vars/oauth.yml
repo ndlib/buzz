@@ -1,0 +1,1 @@
+OAuth_token: "{{ lookup('aws_ssm', '/esu/github/ndlib-git/oauth', decrypt=True ) }}"
