@@ -1,24 +1,25 @@
 ---
 - name: Deploy Buzz pipeline build using CloudFormation
   hosts:
-    - buzz-prep
+    - buzz-prep-oregon
   connection: local
   gather_facts: false
   become: false
+  vars_files:
+    - ./vars/oauth.yml
   vars:
-    template: files/service.yml
+    template: files/service-pipeline.yml
     template_parameters:
       Approvers: '{{ Approvers }}'
       CDBranchName: '{{ CDBranchName }}'
       ContactTag: '{{ tagContact }}'
       InfrastructureStackName: '{{ tagService }}-app-infrastructure'
-      NameTag: '{{ tagName }}'
-      OAuth: '{{ OAuth }}'
+      NameTag: '{{ tagName }}-servicepipeline-{{ tagEnvironment }}'
+      OAuth: '{{ OAuth_token }}'
       OwnerTag: '{{ tagOwner }}'
-      Path: '{{ lb_path }}'
       ProdServiceStackName: '{{ tagService }}-service-prod'
       TestServiceStackName: '{{ tagService }}-service-prep'
-      TestUrl: 
+      TestUrl: '{{ TestUrl }}'
     stack_tags:
       Name: '{{ tagName }}'
       Owner: '{{ tagOwner }}'
@@ -31,7 +32,7 @@
       cloudformation:
         state: present
         template: '{{ template }}'
-        stack_name: '{{ tagService }}-service'
+        stack_name: '{{ tagService }}-service-pipeline'
         template_parameters: '{{ template_parameters }}'
         tags: '{{ stack_tags }}'
       register: aws_cf_stack
