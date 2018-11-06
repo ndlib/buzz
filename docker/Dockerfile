@@ -1,7 +1,6 @@
 FROM ruby:2.4.4
 
 RUN apt-get update -qq && apt-get install -y build-essential
-RUN apt-get install -y postgresql
 
 # Install chamber to get secrets from parameter store
 RUN curl https://github.com/segmentio/chamber/releases/download/v2.2.0/chamber_v2.2.0_amd64.deb --output chamber.deb -L
@@ -41,4 +40,4 @@ EXPOSE $PORT
 # Routing will be handled via AWS infrastructure, and there are no static assets in this service.
 # It's a rails based API, so we are probably ok to just use puma here and not add nginx.
 # By default, this will not run under SSL, since we are terminating at the load balancer.
-CMD chamber exec $ENV_SSM_PATH -- puma
+CMD chamber exec $ENV_SSM_PATH -- bundle exec puma
