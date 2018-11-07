@@ -1,4 +1,5 @@
-FROM ruby:2.4.4
+#FROM ruby:2.4.4
+FROM phusion/passenger-ruby23:2.3.1
 
 RUN apt-get update -qq && apt-get install -y build-essential
 
@@ -11,9 +12,11 @@ ENV CHAMBER_KMS_KEY_ALIAS=aws/ssm
 ARG DEFAULT_ENV_SSM_PATH="all/buzz/prep"
 ENV ENV_SSM_PATH=$DEFAULT_ENV_SSM_PATH
 
-ENV APP_HOME /app_root
+#ENV APP_HOME /app_root
+ENV APP_HOME /home/app/buzz
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
+RUN mkdir $APP_HOME/log
 
 RUN gem install bundler
 COPY Gemfile* $APP_HOME/
@@ -27,6 +30,18 @@ RUN bundle install --without test development
 RUN openssl req -nodes -x509 -new -keyout self_signed.key -out self_signed.cert \
   -subj "/C=US/ST=IN/O=University of Notre Dame/OU=LIBITS"
 
+#
+# Passenger and NGINX install
+#RUN gem install passenger
+#RUN /usr/local/bundle/bin/passenger-install-nginx-module -a
+
+#
+# Info from Phusion webpage
+#
+RUN rm -f /etc/service/nginx/down
+RUN rm /etc/nginx/sites-enabled/default
+ADD docker/buzz.conf /etc/nginx/conf.d/buzz.conf
+RUN bash -lc 'rvm --default use ruby-2.3.1'
 
 COPY . $APP_HOME
 WORKDIR $APP_HOME
@@ -40,4 +55,5 @@ EXPOSE $PORT
 # Routing will be handled via AWS infrastructure, and there are no static assets in this service.
 # It's a rails based API, so we are probably ok to just use puma here and not add nginx.
 # By default, this will not run under SSL, since we are terminating at the load balancer.
-CMD chamber exec $ENV_SSM_PATH -- bundle exec puma
+#CMD chamber exec $ENV_SSM_PATH -- bundle exec puma
+CMD chamber exec $ENV_SSM_PATH -- service nginx start
