@@ -1,7 +1,7 @@
-#FROM ruby:2.4.4
-FROM phusion/passenger-ruby23:2.3.1
+FROM ruby:2.4.4
 
 RUN apt-get update -qq && apt-get install -y build-essential
+RUN apt-get install -y nginx
 
 # Install chamber to get secrets from parameter store
 RUN curl https://github.com/segmentio/chamber/releases/download/v2.2.0/chamber_v2.2.0_amd64.deb --output chamber.deb -L
@@ -13,10 +13,11 @@ ARG DEFAULT_ENV_SSM_PATH="all/buzz/prep"
 ENV ENV_SSM_PATH=$DEFAULT_ENV_SSM_PATH
 
 #ENV APP_HOME /app_root
+# Continue to build in home/app 
 ENV APP_HOME /home/app/buzz
+RUN mkdir /home/app
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
-RUN mkdir $APP_HOME/log
 
 RUN gem install bundler
 COPY Gemfile* $APP_HOME/
@@ -30,22 +31,12 @@ RUN bundle install --without test development
 RUN openssl req -nodes -x509 -new -keyout self_signed.key -out self_signed.cert \
   -subj "/C=US/ST=IN/O=University of Notre Dame/OU=LIBITS"
 
-#
-# Passenger and NGINX install
-#RUN gem install passenger
-#RUN /usr/local/bundle/bin/passenger-install-nginx-module -a
-
-#
-# Info from Phusion webpage
-#
-RUN rm -f /etc/service/nginx/down
-RUN rm /etc/nginx/sites-enabled/default
+# Update NGINX - Add local config file; remove default file from install
 ADD docker/buzz.conf /etc/nginx/conf.d/buzz.conf
-RUN bash -lc 'rvm --default use ruby-2.3.1'
+RUN rm /etc/nginx/sites-enabled/default
 
 COPY . $APP_HOME
 WORKDIR $APP_HOME
-
 
 ENV RAILS_ENV=pre_production
 ARG DEFAULT_PORT="80"
