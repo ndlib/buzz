@@ -13,7 +13,7 @@ ARG DEFAULT_ENV_SSM_PATH="all/buzz/prep"
 ENV ENV_SSM_PATH=$DEFAULT_ENV_SSM_PATH
 
 #ENV APP_HOME /app_root
-# Continue to build in home/app 
+# Continue to build in home/app
 ENV APP_HOME /home/app/buzz
 RUN mkdir /home/app
 RUN mkdir $APP_HOME
@@ -38,21 +38,16 @@ RUN openssl req -nodes -x509 -new -keyout self_signed.key -out self_signed.cert 
 ADD docker/buzz.conf /etc/nginx/conf.d/buzz.conf
 RUN rm /etc/nginx/sites-enabled/default
 
-ADD docker/buzz-puma /etc/init.d
-#ADD docker/puma.service /lib/systemd/system
-
 COPY . $APP_HOME
 WORKDIR $APP_HOME
 
 ENV RAILS_ENV=pre_production
-ARG DEFAULT_PORT="80"
+ARG DEFAULT_PORT="3000"
 ENV PORT=$DEFAULT_PORT
 EXPOSE $PORT
 
 # Routing will be handled via AWS infrastructure, and there are no static assets in this service.
 # It's a rails based API, so we are probably ok to just use puma here and not add nginx.
 # By default, this will not run under SSL, since we are terminating at the load balancer.
-#CMD chamber exec $ENV_SSM_PATH -- bundle exec puma
-WORKDIR $APP_HOME
-CMD chamber exec $ENV_SSM_PATH -- /usr/local/bundle/bin/bundle exec puma -e $RAILS_ENV -C $APP_HOME/config/puma.rb $APP_HOME/config.ru
-CMD chamber exec $ENV_SSM_PATH -- service nginx start
+RUN chmod u+x docker/entry.sh
+CMD chamber exec $ENV_SSM_PATH -- sh docker/entry.sh

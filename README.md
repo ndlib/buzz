@@ -58,7 +58,7 @@ $ curl --insecure \
   -H "Content-Type: application/json" \
   -X POST \
   -d '{ "file_path": "testing/sample1.mp4", "media_type": "video" }' \
-  https://localhost/v1/media_files
+  http://localhost/v1/media_files
 {
   "@context": "http://schema.org",
   "@type": "CreateAction",

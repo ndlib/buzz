@@ -2,14 +2,14 @@
 To run this locally, from the root directory:
 ```bash
 docker build . -f docker/Dockerfile -t buzz
-docker run -p 443:443 --env PORT=443 \
+docker run -p 80:80 --env PORT=80 \
   --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
   --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
   --env AWS_SECURITY_TOKEN=$AWS_SECURITY_TOKEN \
   --env AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN \
   --env AWS_REGION=$AWS_REGION \
   --env RAILS_LOG_TO_STDOUT=true \
-  -it buzz sh ./docker/ssl_cmd.sh
+  -it buzz
 ```
 
 Note: The if you change the PORT env, you will need to match the port in the -p option above
@@ -24,5 +24,6 @@ docker run -p 80:80 --env PORT=80 \
   --env AWS_SESSION_TOKEN=$AWS_SESSION_TOKEN \
   --env AWS_REGION=$AWS_REGION \
   --env ENV_SSM_PATH=all/buzz/production \
+  --env RAILS_LOG_TO_STDOUT=true \
   -it buzz
 ```
