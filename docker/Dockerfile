@@ -42,9 +42,6 @@ COPY . $APP_HOME
 WORKDIR $APP_HOME
 
 ENV RAILS_ENV=pre_production
-ARG DEFAULT_PORT="3000"
-ENV PORT=$DEFAULT_PORT
-EXPOSE $PORT
 
 # Routing will be handled via AWS infrastructure, and there are no static assets in this service.
 # It's a rails based API, so we are probably ok to just use puma here and not add nginx.
