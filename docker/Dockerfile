@@ -1,7 +1,7 @@
 FROM ruby:2.4.4
 
 RUN apt-get update -qq && apt-get install -y build-essential
-RUN apt-get install -y nginx
+RUN apt-get install -y nginx systemd
 
 # Install chamber to get secrets from parameter store
 RUN curl https://github.com/segmentio/chamber/releases/download/v2.2.0/chamber_v2.2.0_amd64.deb --output chamber.deb -L
@@ -17,6 +17,9 @@ ENV ENV_SSM_PATH=$DEFAULT_ENV_SSM_PATH
 ENV APP_HOME /home/app/buzz
 RUN mkdir /home/app
 RUN mkdir $APP_HOME
+RUN mkdir -p $APP_HOME/shared/pids
+RUN mkdir -p $APP_HOME/shared/sockets
+RUN mkdir -p $APP_HOME/shared/log
 WORKDIR $APP_HOME
 
 RUN gem install bundler
@@ -35,6 +38,9 @@ RUN openssl req -nodes -x509 -new -keyout self_signed.key -out self_signed.cert 
 ADD docker/buzz.conf /etc/nginx/conf.d/buzz.conf
 RUN rm /etc/nginx/sites-enabled/default
 
+ADD docker/buzz-puma /etc/init.d
+#ADD docker/puma.service /lib/systemd/system
+
 COPY . $APP_HOME
 WORKDIR $APP_HOME
 
@@ -47,4 +53,6 @@ EXPOSE $PORT
 # It's a rails based API, so we are probably ok to just use puma here and not add nginx.
 # By default, this will not run under SSL, since we are terminating at the load balancer.
 #CMD chamber exec $ENV_SSM_PATH -- bundle exec puma
+WORKDIR $APP_HOME
+CMD chamber exec $ENV_SSM_PATH -- /usr/local/bundle/bin/bundle exec puma -e $RAILS_ENV -C $APP_HOME/config/puma.rb $APP_HOME/config.ru
 CMD chamber exec $ENV_SSM_PATH -- service nginx start
