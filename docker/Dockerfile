@@ -1,7 +1,7 @@
 FROM ruby:2.4.4
 
 RUN apt-get update -qq && apt-get install -y build-essential
-RUN apt-get install -y nginx systemd
+RUN apt-get install -y nginx
 
 # Install chamber to get secrets from parameter store
 RUN curl https://github.com/segmentio/chamber/releases/download/v2.2.0/chamber_v2.2.0_amd64.deb --output chamber.deb -L
@@ -12,15 +12,12 @@ ENV CHAMBER_KMS_KEY_ALIAS=aws/ssm
 ARG DEFAULT_ENV_SSM_PATH="all/buzz/prep"
 ENV ENV_SSM_PATH=$DEFAULT_ENV_SSM_PATH
 
-#ENV APP_HOME /app_root
 # Continue to build in home/app
 ENV APP_HOME /home/app/buzz
-RUN mkdir /home/app
-RUN mkdir $APP_HOME
+RUN mkdir -p $APP_HOME
 RUN mkdir -p $APP_HOME/shared/pids
 RUN mkdir -p $APP_HOME/shared/sockets
 RUN mkdir -p $APP_HOME/shared/log
-WORKDIR $APP_HOME
 
 RUN gem install bundler
 COPY Gemfile* $APP_HOME/
@@ -29,13 +26,8 @@ ENV BUNDLE_GEMFILE=$APP_HOME/Gemfile \
   BUNDLE_PATH=/bundle
 RUN bundle install --without test development
 
-# Generate a self signed cert that can be used when iterating on this container locally
-# In production, this will not be used since we are terminating at the load balancer
-RUN openssl req -nodes -x509 -new -keyout self_signed.key -out self_signed.cert \
-  -subj "/C=US/ST=IN/O=University of Notre Dame/OU=LIBITS"
-
 # Update NGINX - Add local config file; remove default file from install
-ADD docker/buzz.conf /etc/nginx/conf.d/buzz.conf
+ADD docker/nginx.conf /etc/nginx/conf.d/my_app.conf
 RUN rm /etc/nginx/sites-enabled/default
 
 COPY . $APP_HOME
