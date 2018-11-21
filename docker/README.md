@@ -14,6 +14,11 @@ docker run -p 80:80 --env PORT=80 \
 
 Note: The if you change the PORT env, you will need to match the port in the -p option above
 
+## Running Integration Tests
+```bash
+newman run spec/postman/spec.json -e spec/postman/local_env.json
+```
+
 # Running in production
 In production, the application's expected environment key/value pairs will be retrieved from SSM at the given ENV_SSM_PATH, while the AWS environment keys will be taken care of by ECS. Below is a simulated example of how this will be run when deployed as an ECS Task.
 ```bash

@@ -154,9 +154,9 @@ Resources:
               commands:
                 - echo Build started on `date`
                 - |
-                  printf '{"name": "app-host","values": [{"key": "app-host","value": "%s","description": "This is the hostname to my environment","type": "text","enabled": true}],"_postman_variable_scope": "environment","_postman_exported_at": "2018-08-29T20:49:10.416Z","_postman_exported_using": "Postman/6.2.5"}' $TESTING_URL >> test_env.json
+                  printf '{"name": "app-host","values": [{"key": "app-host","value": "%s"}, {"key": "host-protocol","value": "https"}],"_postman_variable_scope": "environment"}' $TESTING_URL >> test_env.json
                 - cat test_env.json
-                - newman run spec/buzz.postman_collection.json -e test_env.json
+                - newman run spec/postman/spec.json -e test_env.json
             post_build:
               commands:
                 - echo Beginning post build on `date`

@@ -1,0 +1,304 @@
+{
+	"info": {
+		"name": "Buzz",
+		"_postman_id": "d8ec3017-ff94-c47f-2e08-fa0e022ee2c1",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Video",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7beefb9c-bdfa-40b1-bae5-5d9370025f6c",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Successfully created the object\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.actionStatus).to.eql(\"CompletedActionStatus\");",
+							"    pm.expect(jsonData.object[\"@type\"]).to.eql(\"VideoObject\");",
+							"    pm.globals.set(\"create_video_id\", jsonData.object[\"@id\"]);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"file_path\": \"testing/sample1.mp4\",\n  \"media_type\": \"video\"\n}"
+				},
+				"url": {
+					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files",
+					"host": [
+						"{{app-host}}"
+					],
+					"path": [
+						"v1",
+						"media_files"
+					]
+				},
+				"description": null
+			},
+			"response": []
+		},
+		{
+			"name": "Get Video",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bc4de6a7-8084-4d2c-97e4-d34f92217327",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Successfully gets the object\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[\"@type\"]).to.eql(\"VideoObject\");",
+							"    pm.expect(jsonData[\"@id\"]).to.eql(pm.globals.get(\"create_video_id\"));",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"file_path\": \"testing/sample1.mp4\",\n  \"media_type\": \"video\"\n}"
+				},
+				"url": {
+					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files/{{create_video_id}}",
+					"host": [
+						"{{app-host}}"
+					],
+					"path": [
+						"v1",
+						"media_files",
+						"{{create_video_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Video",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d5b8d63e-c57a-4392-84f5-23d59e82719b",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Successfully updated the object\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.actionStatus).to.eql(\"CompletedActionStatus\");",
+							"    pm.expect(jsonData.object[\"@type\"]).to.eql(\"VideoObject\");",
+							"    pm.expect(jsonData.object[\"@id\"]).to.eql(pm.globals.get(\"create_video_id\"));",
+							"   ",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"file_path\": \"big_full.mov\",\n  \"media_type\": \"audio\",\n  \"thumbnail_url\": \"testurl\"\n}"
+				},
+				"url": {
+					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files/{{create_video_id}}",
+					"host": [
+						"{{app-host}}"
+					],
+					"path": [
+						"v1",
+						"media_files",
+						"{{create_video_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Create Audio",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a1fc0320-f4a7-4de0-b6aa-311c0f3e0217",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Successfully created the object\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.actionStatus).to.eql(\"CompletedActionStatus\");",
+							"    pm.expect(jsonData.object[\"@type\"]).to.eql(\"AudioObject\");",
+							"    pm.globals.set(\"create_audio_id\", jsonData.object[\"@id\"]);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"application\": \"honeycomb\",\n  \"file_path\": \"https://s3.amazonaws.com/honeycomb-media-dev.library.nd.edu/videos/videos/000/010/897/original/sample1.mp4\",\n  \"media_type\": \"audio\"\n}"
+				},
+				"url": {
+					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files",
+					"host": [
+						"{{app-host}}"
+					],
+					"path": [
+						"v1",
+						"media_files"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get Audio",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dcd4c89e-0835-449c-b3c9-5a2da5838eb1",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Successfully gets the object\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData[\"@type\"]).to.eql(\"AudioObject\");",
+							"    pm.expect(jsonData[\"@id\"]).to.eql(pm.globals.get(\"create_audio_id\"));",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"file_path\": \"big_full.mp3\",\n  \"media_type\": \"audio\"\n}"
+				},
+				"url": {
+					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files/{{create_audio_id}}",
+					"host": [
+						"{{app-host}}"
+					],
+					"path": [
+						"v1",
+						"media_files",
+						"{{create_audio_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Audio",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6275d587-7803-437b-a617-d9f4efec5fd4",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Successfully updated the object\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.actionStatus).to.eql(\"CompletedActionStatus\");",
+							"    pm.expect(jsonData.object[\"@type\"]).to.eql(\"AudioObject\");",
+							"    pm.expect(jsonData.object[\"@id\"]).to.eql(pm.globals.get(\"create_audio_id\"));",
+							"   ",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"file_path\": \"big_full.mov\",\n  \"media_type\": \"audio\",\n  \"thumbnail_url\": \"testurl\"\n}"
+				},
+				"url": {
+					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files/{{create_audio_id}}",
+					"host": [
+						"{{app-host}}"
+					],
+					"path": [
+						"v1",
+						"media_files",
+						"{{create_audio_id}}"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
