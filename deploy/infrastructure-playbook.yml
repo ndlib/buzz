@@ -9,7 +9,7 @@
     template: files/app-infrastructure.yml
     template_parameters:
       VPCID: '{{ vpc_id }}'
-      AuthServicePort: '{{ service_port }}'
+      BuzzServicePort: '{{ service_port }}'
       EnvironmentName: '{{ tagEnvironment }}'
       DomainName : '{{ DomainName }}'
       NameTag: '{{ tagName }}-{{ tagEnvironment }}'
