@@ -30,6 +30,6 @@ public_subnet1: subnet-0cc5aae8fd96cbb8b
 public_subnet2: subnet-0134c4c2fbf3a608a
 # Service Pipeline variables
 Approvers: hanstra@nd.edu
-CDBranchName: master
+CDBranchName: th_dockerize
 
 ...
