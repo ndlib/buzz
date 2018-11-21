@@ -16,7 +16,7 @@ Parameters:
   VPCID:
     Type: String
 
-  AuthServicePort:
+  BuzzServicePort:
     Type: Number
     Default: 80
 
@@ -64,7 +64,7 @@ Resources:
         - Key: Contact
           Value: !Ref ContactTag
 
-  AuthServiceSecurityGroup:
+  BuzzServiceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       VpcId: !Ref VPCID
@@ -72,8 +72,8 @@ Resources:
       SecurityGroupIngress:
         -
           IpProtocol: "tcp"
-          FromPort: !Ref AuthServicePort
-          ToPort: !Ref AuthServicePort
+          FromPort: !Ref BuzzServicePort
+          ToPort: !Ref BuzzServicePort
           CidrIp: 0.0.0.0/0 # This may need to be changed for security purposes
       Tags:
         - Key: Name
@@ -155,11 +155,11 @@ Outputs:
     Export:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ClusterName']]
 
-  AuthServiceSecurityGroupID:
+  BuzzServiceSecurityGroupID:
     Description: The Security Group ID for the Auth Service
-    Value: !Ref AuthServiceSecurityGroup
+    Value: !Ref BuzzServiceSecurityGroup
     Export:
-      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'AuthServiceSecurityGroupID']]
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'BuzzServiceSecurityGroupID']]
 
   ContainerTaskExecutionRoleArn:
     Description: The ARN (Amazon Resource Name) of the Container Task Execution Role
@@ -179,8 +179,8 @@ Outputs:
     Export:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ACMCertificateARN']]
 
-  AuthServicePort:
+  BuzzServicePort:
     Description: The service port for the authentication service
-    Value: !Ref AuthServicePort
+    Value: !Ref BuzzServicePort
     Export:
-      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'AuthServicePort']]
+      Name: !Join [ ':', [ !Ref 'AWS::StackName', 'BuzzServicePort']]
