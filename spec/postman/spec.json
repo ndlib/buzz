@@ -44,7 +44,7 @@
 				"url": {
 					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files",
 					"host": [
-						"{{app-host}}"
+						"{{host-protocol}}://{{app-host}}"
 					],
 					"path": [
 						"v1",
@@ -88,7 +88,7 @@
 				"url": {
 					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files/{{create_video_id}}",
 					"host": [
-						"{{app-host}}"
+						"{{host-protocol}}://{{app-host}}"
 					],
 					"path": [
 						"v1",
@@ -141,7 +141,7 @@
 				"url": {
 					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files/{{create_video_id}}",
 					"host": [
-						"{{app-host}}"
+						"{{host-protocol}}://{{app-host}}"
 					],
 					"path": [
 						"v1",
@@ -191,7 +191,7 @@
 				"url": {
 					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files",
 					"host": [
-						"{{app-host}}"
+						"{{host-protocol}}://{{app-host}}"
 					],
 					"path": [
 						"v1",
@@ -235,7 +235,7 @@
 				"url": {
 					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files/{{create_audio_id}}",
 					"host": [
-						"{{app-host}}"
+						"{{host-protocol}}://{{app-host}}"
 					],
 					"path": [
 						"v1",
@@ -288,7 +288,7 @@
 				"url": {
 					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files/{{create_audio_id}}",
 					"host": [
-						"{{app-host}}"
+						"{{host-protocol}}://{{app-host}}"
 					],
 					"path": [
 						"v1",
