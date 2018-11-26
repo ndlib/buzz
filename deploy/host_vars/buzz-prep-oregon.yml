@@ -31,6 +31,5 @@ public_subnet2: subnet-0134c4c2fbf3a608a
 # Service Pipeline variables
 Approvers: hanstra@nd.edu
 CDBranchName: th_dockerize
-# The following is determined *after* the service is in place
-TestUrl: buzz-Publi-8T1V99SJXP7I-1510599696.us-west-2.elb.amazonaws.com
+TestUrlPath: /all/stacks/buzz-service-prep/url
 ...

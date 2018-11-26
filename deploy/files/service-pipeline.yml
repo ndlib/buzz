@@ -12,9 +12,10 @@ Description: >
 
 Parameters:
 
-  TestUrl:
-    Type: String
-    Description: The URL to test against for newman QA specs
+  TestUrlPath:
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Description: The path to the param that stores the test URL.
+    Default: "/all/stacks/buzz-service-test/url"
 
   CDBranchName:
     Type: String
@@ -146,10 +147,6 @@ Resources:
         BuildSpec: |
           version: 0.2
           phases:
-            pre_build:
-              commands:
-                - echo Pre-build started on `date`
-                - npm install -g newman
             build:
               commands:
                 - echo Build started on `date`
@@ -157,18 +154,15 @@ Resources:
                   printf '{"name": "app-host","values": [{"key": "app-host","value": "%s"}, {"key": "host-protocol","value": "https"}],"_postman_variable_scope": "environment"}' $TESTING_URL >> test_env.json
                 - cat test_env.json
                 - newman run spec/postman/spec.json -e test_env.json
-            post_build:
-              commands:
-                - echo Beginning post build on `date`
       Artifacts:
         Type: NO_ARTIFACTS
       Environment:
         Type: LINUX_CONTAINER
         ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/nodejs:10.1.0
+        Image: postman/newman
         EnvironmentVariables:
           - Name: TESTING_URL
-            Value: !Ref TestUrl
+            Value: !Ref TestUrlPath
 
   DockerCodePipelineBuilder:
     Type: 'AWS::CodeBuild::Project'

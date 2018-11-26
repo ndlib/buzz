@@ -19,7 +19,7 @@
       OwnerTag: '{{ tagOwner }}'
       ProdServiceStackName: '{{ tagService }}-service-prod'
       TestServiceStackName: '{{ tagService }}-service-prep'
-      TestUrl: '{{ TestUrl }}'
+      TestUrlPath: '{{ TestUrlPath }}'
     stack_tags:
       Name: '{{ tagName }}'
       Owner: '{{ tagOwner }}'
@@ -36,4 +36,3 @@
         template_parameters: '{{ template_parameters }}'
         tags: '{{ stack_tags }}'
       register: aws_cf_stack
-
