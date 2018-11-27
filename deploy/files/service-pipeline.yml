@@ -188,7 +188,7 @@ Resources:
             Value: !Ref AmazonContainerRepository
           - Name: IMAGE_TAG
             Value: latest
-          - Name: AWS_DEFAULT_REGION
+          - Name: AWS_REGION
             Value: !Ref AWS::Region
           - Name: AWS_ACCOUNT_ID
             Value: !Ref AWS::AccountId
