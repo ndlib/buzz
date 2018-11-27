@@ -11,17 +11,18 @@ phases:
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
     commands:
-      - echo Build started on `date`
       - echo Building the Docker image...
       - docker build -f docker/Dockerfile -t $REPOSITORY_URI:latest -t $REPOSITORY_URI:$COMMIT_HASH .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$COMMIT_HASH
       - docker tag $REPOSITORY_URI:$COMMIT_HASH $REPOSITORY_URI:$COMMIT_HASH
-  post_build:
-    commands:
-      - echo Build completed on `date`
       - echo Pushing the Docker images...
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$COMMIT_HASH
+  post_build:
+    commands:
+      - echo Running migrations...
+      - docker run -t $REPOSITORY_URI:latest bundle exec rake db:migrate
+      - echo Creating build artifacts...
       - printf '[{"name":"%s","imageUri":"%s"}]' $TEST_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitionstest.json
       - printf '[{"name":"%s","imageUri":"%s"}]' $PROD_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitionsprod.json
 artifacts:
