@@ -35,8 +35,7 @@ WORKDIR $APP_HOME
 
 ENV RAILS_ENV=pre_production
 
-# Routing will be handled via AWS infrastructure, and there are no static assets in this service.
-# It's a rails based API, so we are probably ok to just use puma here and not add nginx.
-# By default, this will not run under SSL, since we are terminating at the load balancer.
-RUN chmod u+x docker/entry.sh
-CMD chamber exec $ENV_SSM_PATH -- sh docker/entry.sh
+RUN chmod u+x docker/entry.sh docker/start_services.sh
+ENTRYPOINT ["bash", "docker/entry.sh"]
+# By default, start the required services
+CMD docker/start_services.sh
