@@ -43,24 +43,35 @@ Parameters:
     Description: The name of the parent infrastructure/networking stack that you created. Necessary
                  to locate and reference resources created by that stack.
 
-  NameTag:
+  PrepEnvPath:
     Type: String
-    Description: The value to add for the "Name" tag. This should share a value with all stacks associated with this project
-    AllowedPattern: ".+-.+-(dev|prod|prep)(-.+)*"
-    ConstraintDescription: "Name should match the pattern [infra]-{service}-[env]-{etc}. Ex: libnd-myservice-dev-myname"
+    Description: The path to the variables in parameter store to inject into the
+                 environment of the code build. This is needed within the pipeline in order to
+                 match the deployed application environment when running things like db:migrate.
 
-  OwnerTag:
+  ProdEnvPath:
     Type: String
-    Description: The value to add for the "Owner" tag. This should be the individual that owns or created this stack.
-
-  ContactTag:
-    Type: String
-    Description: The value to add for the "Contact" tag. This should be an email or phone of someone to contact for information about this stack
+    Description: The path to the variables in parameter store to inject into the
+                 environment of the code build. This is needed within the pipeline in order to
+                 match the deployed application environment when running things like db:migrate.
 
   OAuth:
     Type: String
     NoEcho: true
     Description: The OAuth Token Value to connect CodePipeline to GitHub. Passed in at Runtime.
+
+  PrivateSubnet1ID:
+    Type: String
+
+  PrivateSubnet2ID:
+    Type: String
+
+  VPCID:
+    Type: String
+
+  RDSSecurityGroup:
+    Type: String
+    Description: The security group that will allow the build step to communicate with the RDS instance
 
 Outputs:
 
@@ -90,130 +101,15 @@ Resources:
   AmazonContainerRepository:
     Type: AWS::ECR::Repository
 
-  CodeBuildRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Sid: "TrustPolicyAllowCodeBuildToAssume"
-            Effect: "Allow"
-            Principal:
-              Service:
-                - "codebuild.amazonaws.com"
-            Action:
-              - "sts:AssumeRole"
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AWSCodeBuildDeveloperAccess
-        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
-      Policies:
-        -
-          PolicyName: "AllowCloudWatchLogsForCodeBuild"
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              -
-                Action: logs:*
-                Effect: Allow
-                Resource:
-                  - arn:aws:logs:*:*:log-group:/aws/codebuild/*
-                  - arn:aws:logs:*:*:log-group:/aws/codebuild/*:*:*
-              -
-                Effect: Allow
-                Action:
-                  - s3:GetObject
-                  - s3:GetObjectVersion
-                  - s3:PutObject
-                Resource:
-                  - !GetAtt CodeS3Bucket.Arn
-                  - Fn::Join:
-                      - ""
-                      -
-                        - !GetAtt CodeS3Bucket.Arn
-                        - "/*"
-
-  DockerQABuilder:
-    Type: 'AWS::CodeBuild::Project'
-    Properties:
-      Name: buzz_docker_newman_tests
-      Description: 'Run Newman Tests against buzz'
-      ServiceRole: !Ref CodeBuildRole
-      TimeoutInMinutes: 10
-      Source:
-        Type: GITHUB
-        Location: 'https://github.com/ndlib/buzz.git'
-        GitCloneDepth: 1
-        ReportBuildStatus: true
-        BuildSpec: |
-          version: 0.2
-          phases:
-            build:
-              commands:
-                - echo Build started on `date`
-                - |
-                  printf '{"name": "app-host","values": [{"key": "app-host","value": "%s"}, {"key": "host-protocol","value": "https"}],"_postman_variable_scope": "environment"}' $TESTING_URL >> test_env.json
-                - cat test_env.json
-                - newman run spec/postman/spec.json -e test_env.json
-      Artifacts:
-        Type: NO_ARTIFACTS
-      Environment:
-        Type: LINUX_CONTAINER
-        ComputeType: BUILD_GENERAL1_SMALL
-        Image: postman/newman
-        EnvironmentVariables:
-          - Name: TESTING_URL
-            Value: !Ref TestUrlPath
-
-  DockerCodePipelineBuilder:
-    Type: 'AWS::CodeBuild::Project'
-    Properties:
-      Name: buzz_docker_codepipeline
-      Description: 'Build Docker Image from GitHub for CodePipeline'
-      ServiceRole: !Ref CodeBuildRole
-      TimeoutInMinutes: 10
-      Source:
-        Type: CODEPIPELINE
-        GitCloneDepth: 1
-        BuildSpec: deploy/buildspec.yml
-      Artifacts:
-        Type: CODEPIPELINE
-      Environment:
-        Type: LINUX_CONTAINER
-        ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/docker:17.09.0
-        EnvironmentVariables:
-          - Name: APPLICATION_NAME
-            Value: ndlib-buzz
-          - Name: IMAGE_REPO_NAME
-            Value: !Ref AmazonContainerRepository
-          - Name: IMAGE_TAG
-            Value: latest
-          - Name: AWS_REGION
-            Value: !Ref AWS::Region
-          - Name: AWS_ACCOUNT_ID
-            Value: !Ref AWS::AccountId
-          - Name: TEST_CONTAINER_NAME
-            Value:
-              Fn::ImportValue: !Join [ ':', [ !Ref 'TestServiceStackName', 'Service']]
-          - Name: PROD_CONTAINER_NAME
-            Value:
-              Fn::ImportValue: !Join [ ':', [ !Ref 'ProdServiceStackName', 'Service']]
-
   CodeS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      Tags:
-        - Key: Name
-          Value: !Ref NameTag
-        - Key: Owner
-          Value: !Ref OwnerTag
-        - Key: Contact
-          Value: !Ref ContactTag
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
               SSEAlgorithm: AES256
 
+  ##### Roles/Policies ######
   CodePipelineRole:
     Type: AWS::IAM::Role
     Properties:
@@ -269,8 +165,9 @@ Resources:
               - codebuild:StartBuild
               - codebuild:BatchGetBuilds
             Resource:
-              - !GetAtt DockerCodePipelineBuilder.Arn
-              - !GetAtt DockerQABuilder.Arn
+              - !GetAtt ImageBuilder.Arn
+              - !GetAtt QARunner.Arn
+              - !GetAtt QARunner.Arn
 
           - Effect: Allow
             Action:
@@ -281,6 +178,239 @@ Resources:
             Resource: "*"
       Roles:
         - !Ref CodePipelineRole
+
+  CodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: "TrustPolicyAllowCodeBuildToAssume"
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "codebuild.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSCodeBuildDeveloperAccess
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
+      Policies:
+        -
+          PolicyName: "AllowCloudWatchLogsForCodeBuild"
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              -
+                Action: logs:*
+                Effect: Allow
+                Resource:
+                  - arn:aws:logs:*:*:log-group:/aws/codebuild/*
+                  - arn:aws:logs:*:*:log-group:/aws/codebuild/*:*:*
+              -
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:PutObject
+                Resource:
+                  - !GetAtt CodeS3Bucket.Arn
+                  - Fn::Join:
+                      - ""
+                      -
+                        - !GetAtt CodeS3Bucket.Arn
+                        - "/*"
+
+  MigrationBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: "TrustPolicyAllowCodeBuildToAssume"
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "codebuild.amazonaws.com"
+            Action:
+              - "sts:AssumeRole"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSCodeBuildDeveloperAccess
+        - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser
+      Policies:
+        -
+          PolicyName: "AllowCloudWatchLogsForCodeBuild"
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              -
+                Action: logs:*
+                Effect: Allow
+                Resource:
+                  - arn:aws:logs:*:*:log-group:/aws/codebuild/*
+                  - arn:aws:logs:*:*:log-group:/aws/codebuild/*:*:*
+              -
+                Effect: Allow
+                Action:
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:PutObject
+                Resource:
+                  - !GetAtt CodeS3Bucket.Arn
+                  - Fn::Join:
+                      - ""
+                      -
+                        - !GetAtt CodeS3Bucket.Arn
+                        - "/*"
+        -
+          PolicyName: "GetAppEnvParams"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action:
+                  - "ssm:GetParametersByPath"
+                Resource:
+                  - !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${PrepEnvPath}/*"
+                  - !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/${ProdEnvPath}/*"
+        -
+          PolicyName: "AllowAccessToVPC"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action:
+                  - "ec2:CreateNetworkInterface"
+                  - "ec2:DescribeDhcpOptions"
+                  - "ec2:DescribeNetworkInterfaces"
+                  - "ec2:DeleteNetworkInterface"
+                  - "ec2:DescribeSubnets"
+                  - "ec2:DescribeSecurityGroups"
+                  - "ec2:DescribeVpcs"
+                Resource: "*"
+              -
+                Effect: "Allow"
+                Action:
+                  - "ec2:CreateNetworkInterfacePermission"
+                Resource: !Sub "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:network-interface/*"
+                Condition:
+                  StringEquals:
+                    "ec2:Subnet":
+                      - !Sub "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:subnet/${PrivateSubnet1ID}"
+                      - !Sub "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:subnet/${PrivateSubnet2ID}"
+                    "ec2:AuthorizedService": "codebuild.amazonaws.com"
+
+  #### Code Builds ####
+  QARunner:
+    Type: 'AWS::CodeBuild::Project'
+    Properties:
+      Name: !Sub "${AWS::StackName}_qa_runner"
+      Description: 'Run Newman Tests against buzz'
+      ServiceRole: !Ref CodeBuildRole
+      TimeoutInMinutes: 10
+      Source:
+        Type: GITHUB
+        Location: 'https://github.com/ndlib/buzz.git'
+        GitCloneDepth: 1
+        ReportBuildStatus: true
+        BuildSpec: |
+          version: 0.2
+          phases:
+            build:
+              commands:
+                - echo Build started on `date`
+                - |
+                  printf '{"name": "app-host","values": [{"key": "app-host","value": "%s"}, {"key": "host-protocol","value": "https"}],"_postman_variable_scope": "environment"}' $TESTING_URL >> test_env.json
+                - cat test_env.json
+                - newman run spec/postman/spec.json -e test_env.json
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: postman/newman
+        EnvironmentVariables:
+          - Name: TESTING_URL
+            Value: !Ref TestUrlPath
+
+  ImageBuilder:
+    Type: 'AWS::CodeBuild::Project'
+    Properties:
+      Name: !Sub "${AWS::StackName}_image_builder"
+      Description: 'Build Docker Image from GitHub for CodePipeline'
+      ServiceRole: !Ref CodeBuildRole
+      TimeoutInMinutes: 10
+      Source:
+        Type: CODEPIPELINE
+        GitCloneDepth: 1
+        BuildSpec: deploy/buildspec.yml
+      Artifacts:
+        Type: CODEPIPELINE
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/docker:17.09.0
+        EnvironmentVariables:
+          - Name: APPLICATION_NAME
+            Value: ndlib-buzz
+          - Name: IMAGE_REPO_NAME
+            Value: !Ref AmazonContainerRepository
+          - Name: IMAGE_TAG
+            Value: latest
+          - Name: AWS_REGION
+            Value: !Ref AWS::Region
+          - Name: AWS_ACCOUNT_ID
+            Value: !Ref AWS::AccountId
+          - Name: TEST_CONTAINER_NAME
+            Value:
+              Fn::ImportValue: !Join [ ':', [ !Ref 'TestServiceStackName', 'Service']]
+          - Name: PROD_CONTAINER_NAME
+            Value:
+              Fn::ImportValue: !Join [ ':', [ !Ref 'ProdServiceStackName', 'Service']]
+
+  TestMigrationRunner:
+    Type: 'AWS::CodeBuild::Project'
+    Properties:
+      Name: !Sub "${AWS::StackName}_test_migration_runner"
+      Description: 'Run migrations against test database within the built container'
+      ServiceRole: !Ref MigrationBuildRole
+      TimeoutInMinutes: 10
+      Source:
+        Type: CODEPIPELINE
+        GitCloneDepth: 1
+        BuildSpec: |
+          version: 0.2
+          phases:
+            build:
+              commands:
+                - echo Building the Docker image...
+                - imageUri=$(cat imagedefinitionstest.json | python -c 'import sys, json; print json.load(sys.stdin)[0]["imageUri"]')
+                - docker run -e AWS_REGION=$AWS_REGION -e AWS_CONTAINER_CREDENTIALS_RELATIVE_URI -t $imageUri bundle exec rake db:migrate
+
+      Artifacts:
+        Type: CODEPIPELINE
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref RDSSecurityGroup
+        Subnets:
+          - !Ref PrivateSubnet1ID
+          - !Ref PrivateSubnet2ID
+        VpcId: !Ref VPCID
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/docker:17.09.0
+        EnvironmentVariables:
+          - Name: APPLICATION_NAME
+            Value: ndlib-buzz
+          - Name: IMAGE_REPO_NAME
+            Value: !Ref AmazonContainerRepository
+          - Name: AWS_REGION
+            Value: !Ref AWS::Region
+          - Name: AWS_ACCOUNT_ID
+            Value: !Ref AWS::AccountId
 
   CodePipeline:
     Type: AWS::CodePipeline::Pipeline
@@ -322,7 +452,21 @@ Resources:
                 Provider: CodeBuild
                 Version: "1"
               Configuration:
-                ProjectName: !Ref DockerCodePipelineBuilder
+                ProjectName: !Ref ImageBuilder
+        -
+          Name: MigrateTest
+          Actions:
+            -
+              Name: "MigrateTest"
+              InputArtifacts:
+                - Name: SourceCode
+              ActionTypeId:
+                Owner: AWS
+                Category: Build
+                Provider: CodeBuild
+                Version: "1"
+              Configuration:
+                ProjectName: !Ref TestMigrationRunner
         -
           Name: DeployToTest
           Actions:
@@ -354,7 +498,7 @@ Resources:
                 Provider: CodeBuild
                 Version: "1"
               Configuration:
-                ProjectName: !Ref DockerQABuilder
+                ProjectName: !Ref QARunner
               RunOrder: 1
             -
               Name: "ManualApprovalOfTestEnvironment"

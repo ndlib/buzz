@@ -10,16 +10,18 @@
   vars:
     template: files/service-pipeline.yml
     template_parameters:
+      AppEnvPath: '{{ AppEnvPath }}'
       Approvers: '{{ Approvers }}'
       CDBranchName: '{{ CDBranchName }}'
-      ContactTag: '{{ tagContact }}'
       InfrastructureStackName: '{{ tagService }}-app-infrastructure'
-      NameTag: '{{ tagName }}-servicepipeline-{{ tagEnvironment }}'
       OAuth: '{{ OAuth_token }}'
-      OwnerTag: '{{ tagOwner }}'
       ProdServiceStackName: '{{ tagService }}-service-prod'
       TestServiceStackName: '{{ tagService }}-service-prep'
       TestUrlPath: '{{ TestUrlPath }}'
+      RDSSecurityGroup: '{{ RDSSecurityGroup }}'
+      PrivateSubnet1ID: '{{ private_subnet1 }}'
+      PrivateSubnet2ID: '{{ private_subnet2 }}'
+      VPCID: '{{ vpc_id }}'
     stack_tags:
       Name: '{{ tagName }}'
       Owner: '{{ tagOwner }}'
