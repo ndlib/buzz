@@ -20,8 +20,6 @@ phases:
       - docker push $REPOSITORY_URI:$COMMIT_HASH
   post_build:
     commands:
-      - echo Running migrations...
-      - docker run -e AWS_REGION=$AWS_REGION -e AWS_CONTAINER_CREDENTIALS_RELATIVE_URI -t $REPOSITORY_URI:latest bundle exec rake db:migrate
       - echo Creating build artifacts...
       - printf '[{"name":"%s","imageUri":"%s"}]' $TEST_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitionstest.json
       - printf '[{"name":"%s","imageUri":"%s"}]' $PROD_CONTAINER_NAME $REPOSITORY_URI:$IMAGE_TAG > imagedefinitionsprod.json
