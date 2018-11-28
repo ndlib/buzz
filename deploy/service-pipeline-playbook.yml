@@ -10,7 +10,8 @@
   vars:
     template: files/service-pipeline.yml
     template_parameters:
-      AppEnvPath: '{{ AppEnvPath }}'
+      PrepEnvPath: '{{ PrepEnvPath }}'
+      ProdEnvPath: '{{ ProdEnvPath }}'
       Approvers: '{{ Approvers }}'
       CDBranchName: '{{ CDBranchName }}'
       InfrastructureStackName: '{{ tagService }}-app-infrastructure'

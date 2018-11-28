@@ -167,7 +167,7 @@ Resources:
             Resource:
               - !GetAtt ImageBuilder.Arn
               - !GetAtt QARunner.Arn
-              - !GetAtt QARunner.Arn
+              - !GetAtt TestMigrationRunner.Arn
 
           - Effect: Allow
             Action:
@@ -324,7 +324,7 @@ Resources:
                 - |
                   printf '{"name": "app-host","values": [{"key": "app-host","value": "%s"}, {"key": "host-protocol","value": "https"}],"_postman_variable_scope": "environment"}' $TESTING_URL >> test_env.json
                 - cat test_env.json
-                - newman run spec/postman/spec.json -e test_env.json
+                - newman run spec/postman/spec.json -e test_env.json --insecure
       Artifacts:
         Type: NO_ARTIFACTS
       Environment:
@@ -385,7 +385,8 @@ Resources:
           phases:
             build:
               commands:
-                - echo Building the Docker image...
+                - echo Running migrations...
+                - $(aws ecr get-login --no-include-email --region $AWS_REGION)
                 - imageUri=$(cat imagedefinitionstest.json | python -c 'import sys, json; print json.load(sys.stdin)[0]["imageUri"]')
                 - docker run -e AWS_REGION=$AWS_REGION -e AWS_CONTAINER_CREDENTIALS_RELATIVE_URI -t $imageUri bundle exec rake db:migrate
 
@@ -459,7 +460,7 @@ Resources:
             -
               Name: "MigrateTest"
               InputArtifacts:
-                - Name: SourceCode
+                - Name: BuiltCode
               ActionTypeId:
                 Owner: AWS
                 Category: Build
