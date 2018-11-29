@@ -171,6 +171,7 @@ Resources:
               - !GetAtt ImageBuilder.Arn
               - !GetAtt QARunner.Arn
               - !GetAtt TestMigrationRunner.Arn
+              - !GetAtt ProdMigrationRunner.Arn
 
           - Effect: Allow
             Action:
@@ -399,7 +400,9 @@ Resources:
                 - echo Running migrations...
                 - $(aws ecr get-login --no-include-email --region $AWS_REGION)
                 - imageUri=$(cat imagedefinitionstest.json | python -c 'import sys, json; print json.load(sys.stdin)[0]["imageUri"]')
-                - docker run -e AWS_REGION=$AWS_REGION -e AWS_CONTAINER_CREDENTIALS_RELATIVE_URI -t $imageUri bundle exec rake db:migrate
+                - docker run -e AWS_REGION=$AWS_REGION -e AWS_CONTAINER_CREDENTIALS_RELATIVE_URI
+                    -e ENV_SSM_PATH=$APP_ENV_PATH
+                    -t $imageUri bundle exec rake db:migrate
 
       Artifacts:
         Type: CODEPIPELINE
@@ -424,6 +427,55 @@ Resources:
             Value: !Ref AWS::Region
           - Name: AWS_ACCOUNT_ID
             Value: !Ref AWS::AccountId
+          - Name: APP_ENV_PATH
+            Value: !Ref PrepEnvPath
+
+  ProdMigrationRunner:
+    Type: 'AWS::CodeBuild::Project'
+    Properties:
+      Name: !Sub "${AWS::StackName}_prod_migration_runner"
+      Description: 'Run migrations against prod database within the built container'
+      ServiceRole: !Ref MigrationBuildRole
+      TimeoutInMinutes: 10
+      Source:
+        Type: CODEPIPELINE
+        GitCloneDepth: 1
+        BuildSpec: |
+          version: 0.2
+          phases:
+            build:
+              commands:
+                - echo Running migrations...
+                - $(aws ecr get-login --no-include-email --region $AWS_REGION)
+                - imageUri=$(cat imagedefinitionsprod.json | python -c 'import sys, json; print json.load(sys.stdin)[0]["imageUri"]')
+                - docker run -e AWS_REGION=$AWS_REGION -e AWS_CONTAINER_CREDENTIALS_RELATIVE_URI
+                    -e ENV_SSM_PATH=$APP_ENV_PATH
+                    -t $imageUri bundle exec rake db:migrate
+      Artifacts:
+        Type: CODEPIPELINE
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref RDSSecurityGroup
+        Subnets:
+          - Fn::ImportValue: !Join [':', [!Ref NetworkStackName, 'PrivateSubnet1ID']]
+          - Fn::ImportValue: !Join [':', [!Ref NetworkStackName, 'PrivateSubnet2ID']]
+        VpcId:
+          Fn::ImportValue: !Join [':', [!Ref NetworkStackName, 'VPCID']]
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/docker:17.09.0
+        EnvironmentVariables:
+          - Name: APPLICATION_NAME
+            Value: ndlib-buzz
+          - Name: IMAGE_REPO_NAME
+            Value: !Ref AmazonContainerRepository
+          - Name: AWS_REGION
+            Value: !Ref AWS::Region
+          - Name: AWS_ACCOUNT_ID
+            Value: !Ref AWS::AccountId
+          - Name: APP_ENV_PATH
+            Value: !Ref ProdEnvPath
 
   CodePipeline:
     Type: AWS::CodePipeline::Pipeline
@@ -437,7 +489,7 @@ Resources:
           Name: Source
           Actions:
             -
-              Name: "RetrieveSourceCode"
+              Name: "RetrieveSource"
               ActionTypeId:
                 Owner: ThirdParty
                 Category: Source
@@ -470,7 +522,7 @@ Resources:
           Name: MigrateTest
           Actions:
             -
-              Name: "MigrateTest"
+              Name: "MigrateTestDB"
               InputArtifacts:
                 - Name: BuiltCode
               ActionTypeId:
@@ -484,7 +536,7 @@ Resources:
           Name: DeployToTest
           Actions:
             -
-              Name: "DeployAsTestTask"
+              Name: "DeployToTest"
               InputArtifacts:
                 - Name: BuiltCode
               ActionTypeId:
@@ -502,7 +554,7 @@ Resources:
           Name: Approval
           Actions:
             -
-              Name: "RunQATests"
+              Name: "QA"
               InputArtifacts:
                 - Name: SourceCode
               ActionTypeId:
@@ -514,7 +566,7 @@ Resources:
                 ProjectName: !Ref QARunner
               RunOrder: 1
             -
-              Name: "ManualApprovalOfTestEnvironment"
+              Name: "UserAcceptance"
               ActionTypeId:
                 Owner: AWS
                 Category: Approval
@@ -530,6 +582,20 @@ Resources:
                       ProdURL:
                         Fn::ImportValue: !Join [':', [!Ref ProdServiceStackName, 'PublicLoadBalancerDNSName']]
               RunOrder: 2
+        -
+          Name: MigrateProd
+          Actions:
+            -
+              Name: "MigrateProductionDB"
+              InputArtifacts:
+                - Name: BuiltCode
+              ActionTypeId:
+                Owner: AWS
+                Category: Build
+                Provider: CodeBuild
+                Version: "1"
+              Configuration:
+                ProjectName: !Ref ProdMigrationRunner
         -
           Name: DeployToProduction
           Actions:
