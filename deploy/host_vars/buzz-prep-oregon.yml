@@ -6,9 +6,7 @@ tagDescription: 'Buzz application - prep'
 tagEnvironment: prep
 tagOwner: hanstra
 tagService: "buzz"
-tagBackup: True
 # Infrastructure variables
-vpc_id: vpc-07ee54d622c5c8d47
 host: buzz-prep.library.nd.edu
 service_port: 80
 DomainName: '*.library.nd.edu'
@@ -23,16 +21,11 @@ lb_path: '*'
 lb_route_priority: 1
 repository: /ndlib/buzz
 template: service.yml
-# Subnets - specific to US-West-2 (Oregon)
+# Network variables
+vpc_id: vpc-07ee54d622c5c8d47
 RDSSecurityGroup: sg-0e1859505f96c6548
 private_subnet1: subnet-0c9bf404af7084f0a
 private_subnet2: subnet-0296ce94fcb425673
 public_subnet1: subnet-0cc5aae8fd96cbb8b
 public_subnet2: subnet-0134c4c2fbf3a608a
-# Service Pipeline variables
-Approvers: jgondron@nd.edu
-CDBranchName: th_dockerize
-TestUrlPath: /all/stacks/buzz-service-prep/url
-PrepEnvPath: all/buzz/prep
-ProdEnvPath: all/buzz/prep
 ...

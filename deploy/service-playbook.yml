@@ -7,7 +7,7 @@
   gather_facts: false
   become: false
   vars:
-    template: files/service.yml
+    template: cloudformation/service.yml
     template_parameters:
       AppEnvPath: '{{ AppEnvPath }}'
       ContactTag: '{{ tagContact }}'
@@ -43,4 +43,3 @@
         stack_name: '{{ tagService }}-service-{{ tagEnvironment }}'
         template_parameters: '{{ template_parameters }}'
         tags: '{{ stack_tags }}'
-

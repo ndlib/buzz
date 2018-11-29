@@ -510,6 +510,7 @@ Resources:
                 Version: "1"
               Configuration:
                 NotificationArn: !Ref SNSTopic
+#TODO: Make this better
                 CustomData: Approval or Reject this change after running Exploratory Tests
               RunOrder: 2
         -

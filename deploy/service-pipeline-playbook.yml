@@ -1,14 +1,14 @@
 ---
 - name: Deploy Buzz pipeline build using CloudFormation
   hosts:
-    - buzz-prep-oregon
+    - buzz-pipeline-oregon
   connection: local
   gather_facts: false
   become: false
   vars_files:
     - ./vars/oauth.yml
   vars:
-    template: files/service-pipeline.yml
+    template: cloudformation/service-pipeline.yml
     template_parameters:
       PrepEnvPath: '{{ PrepEnvPath }}'
       ProdEnvPath: '{{ ProdEnvPath }}'
@@ -29,7 +29,6 @@
       Contact: '{{ tagContact }}'
       Description: '{{ tagDescription }}'
       Service: '{{ tagService }}'
-      FQDN: '{{ host }}'
   tasks:
     - name: Launch application infrastructure Cloud Formation
       cloudformation:
