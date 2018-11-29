@@ -10,21 +10,14 @@
     template: cloudformation/service.yml
     template_parameters:
       AppEnvPath: '{{ AppEnvPath }}'
-      ContactTag: '{{ tagContact }}'
       ContainerCpu: '{{ ContainerCPU }}'
       ContainerMemory: '{{ ContainerMemory }}'
       DesiredCount: '{{ DesiredCount }}'
       ImageUrl: '{{ ImageURL }}'
       InfrastructureStackName: '{{ tagService }}-app-infrastructure'
-      NameTag: '{{ tagName }}-{{ tagEnvironment }}'
-      OwnerTag: '{{ tagOwner }}'
+      NetworkStackName: '{{ NetworkStackName }}'
       Path: '{{ lb_path }}'
       Priority: '{{ lb_route_priority }}'
-      PrivateSubnet1ID: '{{ private_subnet1 }}'
-      PrivateSubnet2ID: '{{ private_subnet2 }}'
-      PublicSubnet1ID: '{{ public_subnet1 }}'
-      PublicSubnet2ID: '{{ public_subnet2 }}'
-      VPCID: '{{ vpc_id }}'
     stack_tags:
       Name: '{{ tagName }}-{{ tagEnvironment }}'
       Owner: '{{ tagOwner }}'

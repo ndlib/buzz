@@ -12,34 +12,31 @@ Description: >
     - InfrastructureStackName:PublicLoadBalancerSecurityGroup
     - InfrastructureStackName:ACMCertificateARN
 
+  Expects the following exports ftom the network stack:
+    - NetworkStackName:PrivateSubnet1ID
+    - NetworkStackName:PrivateSubnet2ID
+    - NetworkStackName:VPCID
+    - NetworkStackName:PublicSubnet1ID
+    - NetworkStackName:PublicSubnet2ID
+
 Parameters:
-
-  PrivateSubnet1ID:
-    Type: String
-
-  PrivateSubnet2ID:
-    Type: String
-
-  VPCID:
-    Type: String
-
-  PublicSubnet1ID:
-    Type: String
-
-  PublicSubnet2ID:
-    Type: String
-
-  AppEnvPath:
-    Type: String
-    Description: The path to the variables in parameter store to inject into the
-                 environment of the deployed application. Note the exclusion of the
-                 leading slash.
 
   InfrastructureStackName:
     Type: String
     Default: "buzz-app-infrastructure"
     Description: The name of the parent infrastructure that you created. Necessary
                  to locate and reference resources created by that stack.
+
+  NetworkStackName:
+    Type: String
+    Description: The name of the parent networking stack created.
+    Default: "unpeered-network"
+
+  AppEnvPath:
+    Type: String
+    Description: The path to the variables in parameter store to inject into the
+                 environment of the deployed application. Note the exclusion of the
+                 leading slash.
 
   ImageUrl:
     Type: String
@@ -75,20 +72,6 @@ Parameters:
     Type: Number
     Default: 1
     Description: How many copies of the service task to run
-
-  NameTag:
-    Type: String
-    Description: The value to add for the "Name" tag. This should share a value with all stacks associated with this project
-    AllowedPattern: ".+-.+-(dev|prod|prep)(-.+)*"
-    ConstraintDescription: "Name should match the pattern [infra]-{service}-[env]-{etc}. Ex: libnd-myservice-dev-myname"
-
-  OwnerTag:
-    Type: String
-    Description: The value to add for the "Owner" tag. This should be the individual that owns or created this stack.
-
-  ContactTag:
-    Type: String
-    Description: The value to add for the "Contact" tag. This should be an email or phone of someone to contact for information about this stack
 
 Outputs:
   PublicLoadBalancerDNSName:
@@ -172,8 +155,8 @@ Resources:
           SecurityGroups:
             - Fn::ImportValue: !Join [':', [!Ref InfrastructureStackName, 'BuzzServiceSecurityGroupID']]
           Subnets:
-            - !Ref PrivateSubnet1ID
-            - !Ref PrivateSubnet2ID
+            - Fn::ImportValue: !Join [':', [!Ref NetworkStackName, 'PrivateSubnet1ID']]
+            - Fn::ImportValue: !Join [':', [!Ref NetworkStackName, 'PrivateSubnet2ID']]
       TaskDefinition: !Ref 'TaskDefinition'
       LoadBalancers:
         - ContainerName: !Sub '${AWS::StackName}'
@@ -208,14 +191,8 @@ Resources:
       TargetGroupAttributes:
       - Key: deregistration_delay.timeout_seconds
         Value: '10'
-      VpcId: !Ref VPCID
-      Tags:
-        - Key: Name
-          Value: !Ref NameTag
-        - Key: Owner
-          Value: !Ref OwnerTag
-        - Key: Contact
-          Value: !Ref ContactTag
+      VpcId:
+        Fn::ImportValue: !Join [':', [!Ref NetworkStackName, 'VPCID']]
 
   PublicLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -229,15 +206,10 @@ Resources:
         -
           Fn::ImportValue: !Join [':', [!Ref InfrastructureStackName, 'PublicLoadBalancerSecurityGroup']]
       Subnets:
-        - !Ref PublicSubnet1ID
-        - !Ref PublicSubnet2ID
-      Tags:
-        - Key: Name
-          Value: !Ref NameTag
-        - Key: Owner
-          Value: !Ref OwnerTag
-        - Key: Contact
-          Value: !Ref ContactTag
+        -
+          Fn::ImportValue: !Join [':', [!Ref NetworkStackName, 'PublicSubnet1ID']]
+        -
+          Fn::ImportValue: !Join [':', [!Ref NetworkStackName, 'PublicSubnet2ID']]
 
   PublicLoadBalancerListener:
     Type: AWS::ElasticLoadBalancingV2::Listener

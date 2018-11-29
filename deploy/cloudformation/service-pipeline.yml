@@ -10,7 +10,35 @@ Description: >
     - ProdServiceStackName:Service
     - TestServiceStackName:Service
 
+  Expects the following exports ftom the network stack:
+    - NetworkStackName:PrivateSubnet1ID
+    - NetworkStackName:PrivateSubnet2ID
+    - NetworkStackName:VPCID
+    - NetworkStackName:PublicSubnet1ID
+    - NetworkStackName:PublicSubnet2ID
+
 Parameters:
+
+  ProdServiceStackName:
+    Type: String
+    Default: buzz-service-prod
+    Description: The name of the CloudFormation stack that created the production ECS Service
+
+  TestServiceStackName:
+    Type: String
+    Default: buzz-service-test
+    Description: The name of the CloudFormation stack that created the test ECS Service
+
+  NetworkStackName:
+    Type: String
+    Description: The name of the parent networking stack created.
+    Default: "unpeered-network"
+
+  InfrastructureStackName:
+    Type: String
+    Default: buzz-app-infrastructure
+    Description: The name of the parent infrastructure/networking stack that you created. Necessary
+                 to locate and reference resources created by that stack.
 
   TestUrlPath:
     Type: 'AWS::SSM::Parameter::Value<String>'
@@ -26,22 +54,6 @@ Parameters:
     Type: String
     Default: ''
     Description: An e-mail address of someone who can approve test environment
-
-  ProdServiceStackName:
-    Type: String
-    Default: buzz-service-prod
-    Description: The name of the CloudFormation stack that created the production ECS Service
-
-  TestServiceStackName:
-    Type: String
-    Default: buzz-service-test
-    Description: The name of the CloudFormation stack that created the test ECS Service
-
-  InfrastructureStackName:
-    Type: String
-    Default: buzz-app-infrastructure
-    Description: The name of the parent infrastructure/networking stack that you created. Necessary
-                 to locate and reference resources created by that stack.
 
   PrepEnvPath:
     Type: String
@@ -59,15 +71,6 @@ Parameters:
     Type: String
     NoEcho: true
     Description: The OAuth Token Value to connect CodePipeline to GitHub. Passed in at Runtime.
-
-  PrivateSubnet1ID:
-    Type: String
-
-  PrivateSubnet2ID:
-    Type: String
-
-  VPCID:
-    Type: String
 
   RDSSecurityGroup:
     Type: String
@@ -298,8 +301,16 @@ Resources:
                 Condition:
                   StringEquals:
                     "ec2:Subnet":
-                      - !Sub "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:subnet/${PrivateSubnet1ID}"
-                      - !Sub "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:subnet/${PrivateSubnet2ID}"
+                      -
+                        Fn::Sub:
+                          - "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:subnet/${subnetID}"
+                          - subnetID:
+                              Fn::ImportValue: !Join [':', [!Ref NetworkStackName, 'PrivateSubnet1ID']]
+                      -
+                        Fn::Sub:
+                          - "arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:subnet/${subnetID}"
+                          - subnetID:
+                              Fn::ImportValue: !Join [':', [!Ref NetworkStackName, 'PrivateSubnet2ID']]
                     "ec2:AuthorizedService": "codebuild.amazonaws.com"
 
   #### Code Builds ####
@@ -396,9 +407,10 @@ Resources:
         SecurityGroupIds:
           - !Ref RDSSecurityGroup
         Subnets:
-          - !Ref PrivateSubnet1ID
-          - !Ref PrivateSubnet2ID
-        VpcId: !Ref VPCID
+          - Fn::ImportValue: !Join [':', [!Ref NetworkStackName, 'PrivateSubnet1ID']]
+          - Fn::ImportValue: !Join [':', [!Ref NetworkStackName, 'PrivateSubnet2ID']]
+        VpcId:
+          Fn::ImportValue: !Join [':', [!Ref NetworkStackName, 'VPCID']]
       Environment:
         Type: LINUX_CONTAINER
         ComputeType: BUILD_GENERAL1_SMALL
@@ -510,8 +522,13 @@ Resources:
                 Version: "1"
               Configuration:
                 NotificationArn: !Ref SNSTopic
-#TODO: Make this better
-                CustomData: Approval or Reject this change after running Exploratory Tests
+                CustomData:
+                  Fn::Sub:
+                    - "You can review these changes at https://${TestURL}. Once approved, this will be deployed to https://${ProdURL}."
+                    - TestURL:
+                        Fn::ImportValue: !Join [':', [!Ref TestServiceStackName, 'PublicLoadBalancerDNSName']]
+                      ProdURL:
+                        Fn::ImportValue: !Join [':', [!Ref ProdServiceStackName, 'PublicLoadBalancerDNSName']]
               RunOrder: 2
         -
           Name: DeployToProduction
