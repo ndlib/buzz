@@ -14,7 +14,7 @@ Approvers: jgondron@nd.edu
 CDBranchName: th_dockerize
 TestUrlPath: /all/stacks/buzz-service-prep/url
 PrepEnvPath: all/buzz/prep
-ProdEnvPath: all/buzz/prod
+ProdEnvPath: all/buzz/production
 # Network variables
 RDSSecurityGroup: sg-0e1859505f96c6548
 ...
