@@ -11,7 +11,7 @@ NetworkStackName: mellon-network
 
 # Pipeline variables
 Approvers: jgondron@nd.edu
-CDBranchName: th_dockerize
+CDBranchName: test-migration
 TestUrlPath: /all/stacks/buzz-service-prep/url
 PrepEnvPath: all/buzz/prep
 ProdEnvPath: all/buzz/production
