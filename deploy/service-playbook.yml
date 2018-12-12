@@ -1,8 +1,12 @@
 ---
 - name: Deploy Buzz infrastructure build using Cloudformation
   hosts:
-    - buzz-prep-oregon
-    - buzz-prod-oregon
+# LibND - Virginia
+    - buzz-prep-service-libnd
+    - buzz-prod-service-libnd
+#Testlibnd - Oregon
+#    - buzz-prep-oregon
+#    - buzz-prod-oregon
   connection: local
   gather_facts: false
   become: false

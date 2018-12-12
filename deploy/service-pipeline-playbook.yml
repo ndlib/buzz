@@ -1,7 +1,8 @@
 ---
 - name: Deploy Buzz pipeline build using CloudFormation
   hosts:
-    - buzz-pipeline-oregon
+    buzz-pipeline-libnd
+#    - buzz-pipeline-oregon
   connection: local
   gather_facts: false
   become: false
