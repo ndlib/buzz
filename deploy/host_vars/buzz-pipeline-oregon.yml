@@ -7,14 +7,15 @@ tagEnvironment: prod
 tagOwner: hanstra
 tagService: "buzz"
 # Stack names
-NetworkStackName: mellon-network
+NetworkStackName: unpeered-network
 
 # Pipeline variables
-Approvers: jgondron@nd.edu
+Approvers: hanstra@nd.edu
+QAApprovers: hanstra@nd.edu
 CDBranchName: th_dockerize
 TestUrlPath: /all/stacks/buzz-service-prep/url
 PrepEnvPath: all/buzz/prep
 ProdEnvPath: all/buzz/production
 # Network variables
-RDSSecurityGroup: sg-0e1859505f96c6548
+RDSSecurityGroup: sg-0ace5a62504d34202
 ...
