@@ -9,6 +9,7 @@ tagService: "buzz"
 # Infrastructure variables
 host: buzz-prep.library.nd.edu
 service_port: 80
+vpc_id: vpc-0b6f1338bb6eec079
 DomainName: '*.library.nd.edu'
 # Service variables
 AppEnvPath: all/buzz/prep
@@ -22,5 +23,5 @@ lb_route_priority: 1
 repository: /ndlib/buzz
 template: service.yml
 # Stack names
-NetworkStackName: mellon-network
+NetworkStackName: unpeered-network
 ...
