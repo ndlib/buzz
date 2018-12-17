@@ -33,7 +33,7 @@ RUN rm /etc/nginx/sites-enabled/default
 COPY . $APP_HOME
 WORKDIR $APP_HOME
 
-ENV RAILS_ENV=pre_production
+ENV RAILS_ENV=production
 
 RUN chmod u+x docker/entry.sh docker/start_services.sh
 ENTRYPOINT ["bash", "docker/entry.sh"]
