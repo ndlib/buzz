@@ -3,14 +3,15 @@
 tagName: libnd-buzz
 tagContact: lib-esu-group@nd.edu
 tagDescription: 'Buzz application pipeline'
-tagEnvironment: prod
+tagEnvironment: production
 tagOwner: hanstra
 tagService: "buzz"
 # Stack names
 NetworkStackName: peered-network
 
 # Pipeline variables
-Approvers: jgondron@nd.edu
+Approvers: wse-notifications-group@nd.edu
+QAApprovers: hl-qa-approvers-list@nd.edu
 CDBranchName: th_dockerize
 TestUrlPath: /all/stacks/buzz-service-prep/url
 PrepEnvPath: all/buzz/prep
