@@ -3,7 +3,7 @@
 tagName: libnd-buzz
 tagContact: lib-esu-group@nd.edu
 tagDescription: 'Buzz application pipeline'
-tagEnvironment: production
+tagEnvironment: prod
 tagOwner: hanstra
 tagService: "buzz"
 # Stack names
