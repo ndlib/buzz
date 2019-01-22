@@ -1,0 +1,18 @@
+{
+  "name": "app-host",
+  "values": [
+    {
+      "key": "app-host",
+      "value": "localhost",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "host-protocol",
+      "value": "http",
+      "type": "text",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}

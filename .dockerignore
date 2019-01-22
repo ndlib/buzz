@@ -1,3 +1,4 @@
+.git
 *.rbc
 capybara-*.html
 .rspec
@@ -44,6 +45,3 @@ bower.json
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
-
-# Ignore any ansible playbook retries
-deploy/*.retry

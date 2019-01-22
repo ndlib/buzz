@@ -3,4 +3,6 @@ Rails.application.routes.draw do
   scope "v1" do
     resources :media_files, only: [:create, :show, :update, :destroy]
   end
+
+  resources :healthcheck, only: [:index]
 end
