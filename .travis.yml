@@ -1,9 +1,11 @@
 language: ruby
-sudo: false
 rvm:
   - 2.3.1
 script:
   - bundle exec rspec spec
+before_install:
+  - yes | gem update --system --force
+  - gem install bundler
 before_script:
   - cp config/database_example.yml config/database.yml
   - cp config/secrets.example.yml config/secrets.yml
@@ -16,10 +18,3 @@ addons:
   postgresql: "9.4"
 services:
   - postgresql
-notifications:
-  hipchat:
-    on_success: change
-    on_failure: change
-    notify: true
-    rooms:
-      secure: JyXM6Tb27tNx38Pd4BH7ClCRuAYrajmYBWAbFDGRDWSSvpFJyouPIrs90fEgQd3FVnr7QV1Y1qdJsInPAK7NokACXOjk7sEb7ibXyZzy+q4rsGffVK6lL+5eYBEw2JL1ZZwa5O3l5TkDDnyexou3GVbhTAbRS84JmlmunbbZhVs=
