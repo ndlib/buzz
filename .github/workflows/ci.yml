@@ -1,0 +1,38 @@
+name: Ruby CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby: [ '2.3.1' ]
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Ruby
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+    - name: Update gems
+      run: yes | gem update --system --force
+    - name: Set up Bundler
+      run: gem install bundler:1.17.3
+    - name: Install dependencies
+      run: bundle install
+    - name: Install dependencies
+      run: |
+        cp config/database_example.yml config/database.yml
+        cp config/secrets.example.yml config/secrets.yml
+        psql -c 'create database buzz_test' -U postgres
+        psql -c 'create role root superuser createdb createrole inherit login replication' -U postgres
+        RAILS_ENV=test bundle exec rake --trace db:migrate test
+    - name: Run script
+      run: bundle exec rspec spec
+    services:
+        postgresql:
+            image: postgres:9.4
