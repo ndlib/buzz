@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: [ '2.3.1' ]
+        ruby: [ '2.3.1', '2.4', '2.5', '2.6', '2.7']
     steps:
     - uses: actions/checkout@master
     - name: Set up Ruby
@@ -25,6 +25,10 @@ jobs:
     - name: Install dependencies
       run: bundle install
     - name: Install dependencies
+      env:
+        PGPASSWORD: password
+        PGHOST: localhost
+        PGUSER: postgres
       run: |
         cp config/database_example.yml config/database.yml
         cp config/secrets.example.yml config/secrets.yml
@@ -35,4 +39,12 @@ jobs:
       run: bundle exec rspec spec
     services:
         postgresql:
-            image: postgres:9.4
+            image: postgres:9.4.26
+            ports:
+              - 5432:5432
+            env:
+              POSTGRES_PASSWORD: password
+            options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    
+
+
