@@ -44,6 +44,7 @@ jobs:
         # PGPASSWORD: password
         PGHOST: localhost
         PGUSER: root
+        POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
       run: |
         cp config/database_example.yml config/database.yml
         cp config/secrets.example.yml config/secrets.yml
