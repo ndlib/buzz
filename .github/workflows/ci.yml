@@ -14,7 +14,7 @@ jobs:
       postgres:
           image: postgres:9.4.26
           env:
-            POSTGRES_USER: postgres
+            POSTGRES_USER: root
             POSTGRES_PASSWORD: password        
           ports:
             - 5432:5432
@@ -43,7 +43,7 @@ jobs:
       env:
         PGPASSWORD: password
         PGHOST: localhost
-        PGUSER: postgres
+        PGUSER: root
       run: |
         cp config/database_example.yml config/database.yml
         cp config/secrets.example.yml config/secrets.yml
