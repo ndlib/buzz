@@ -44,6 +44,7 @@ jobs:
         # PGPASSWORD: password
         PGHOST: localhost
         PGUSER: root
+        PGPASSWORD: password
       run: |
         cp config/database_example.yml config/database.yml
         cp config/secrets.example.yml config/secrets.yml
