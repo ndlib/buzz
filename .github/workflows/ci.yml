@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      postgresql:
+      postgres:
           image: postgres:9.4.26
           env:
             POSTGRES_USER: postgres
@@ -51,7 +51,7 @@ jobs:
         psql -c 'create role root superuser createdb createrole inherit login replication' -U postgres
 
     - name: Run rake script
-      run: RAILS_ENV=test bundle exec rake --trace db:migrate test -U postgres
+      run: RAILS_ENV=test bundle exec rake --trace db:migrate test
 
     - name: Run script
       run: bundle exec rspec spec
