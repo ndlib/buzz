@@ -13,8 +13,8 @@ jobs:
     services:
       postgres:
           image: postgres:9.4.26
-          # env:
-          #   POSTGRES_USER: root
+          env:
+            POSTGRES_USER: root
           #   POSTGRES_PASSWORD: password        
           ports:
             - 5432:5432
