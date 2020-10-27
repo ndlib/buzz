@@ -2,7 +2,7 @@ name: Ruby CI
 
 on:
   push:
-    # branches: [ main ]
+    branches: [ main, ESU-1478 ]
   pull_request:
     branches: [ main ]
 
@@ -39,11 +39,11 @@ jobs:
       run: gem install bundler:1.17.3
     - name: Install dependencies
       run: bundle install
-    - name: Install dependencies
+    - name: Set up ENV variables
       env:
-        PGPASSWORD: password
-        PGHOST: localhost
-        PGUSER: postgres
+        RDS_PASSWORD: password
+        RDS_HOSTNAME: localhost
+        RDS_USERNAME: postgres
       run: |
         cp config/database_example.yml config/database.yml
         cp config/secrets.example.yml config/secrets.yml
