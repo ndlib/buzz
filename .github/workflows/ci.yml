@@ -41,9 +41,9 @@ jobs:
       run: bundle install
     - name: Set up ENV variables
       env:
-        RDS_PASSWORD: password
-        RDS_HOSTNAME: localhost
-        RDS_USERNAME: postgres
+        PGPASSWORD: password
+        PGHOST: localhost
+        PGUSER: postgres
       run: |
         cp config/database_example.yml config/database.yml
         cp config/secrets.example.yml config/secrets.yml
