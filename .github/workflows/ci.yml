@@ -10,15 +10,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # services:
-    #   postgres:
-    #       image: postgres:9.4.26
-    #       env:
-    #         POSTGRES_USER: root
-    #         POSTGRES_PASSWORD: password        
-    #       ports:
-    #         - 5432:5432
-    #       options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    services:
+      postgres:
+          image: postgres:9.4.26
+          env:
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: password
+          ports:
+            - 5432:5432
+          options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     strategy:
       matrix:
@@ -44,7 +44,6 @@ jobs:
         # PGPASSWORD: password
         PGHOST: localhost
         PGUSER: root
-        POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }} # get randomly assigned published port
       run: |
         cp config/database_example.yml config/database.yml
         cp config/secrets.example.yml config/secrets.yml

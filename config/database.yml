@@ -6,7 +6,7 @@ pg_settings: &pg_settings
 
 local_user: &local_user
   username: root
-  password:
+  password: password
 
 development:
   <<: *local_user
