@@ -49,7 +49,7 @@ jobs:
         cp config/secrets.example.yml config/secrets.yml
         psql -c 'create database buzz_test' -U postgres
         psql -c 'create role root superuser createdb createrole inherit login replication' -U postgres
-        RAILS_ENV=test bundle exec rake --trace db:migrate test
+        RAILS_ENV=test PGPASSWORD="$POSTGRES_PASSWORD" bundle exec rake --trace db:migrate test
 
     - name: Run script
       run: bundle exec rspec spec
