@@ -14,7 +14,6 @@ jobs:
       postgres:
           image: postgres:9.4.26
           env:
-            POSTGRES_USER: root
             POSTGRES_PASSWORD: password
           ports:
             - 5432:5432
@@ -41,15 +40,14 @@ jobs:
       run: bundle install
     - name: Set up ENV variables
       env:
-        # PGPASSWORD: password
         PGHOST: localhost
-        PGUSER: root
+        PGUSER: postgres
         PGPASSWORD: password
       run: |
         cp config/database_example.yml config/database.yml
         cp config/secrets.example.yml config/secrets.yml
-        psql -c 'create database buzz_test' -U root
-        psql -c 'create role root superuser createdb createrole inherit login replication' -U root
+        psql -c 'create database buzz_test' -U postgres
+        psql -c 'create role root superuser createdb createrole inherit login replication' -U postgres
 
     - name: Run rake script
       run: RAILS_ENV=test bundle exec rake --trace db:migrate test

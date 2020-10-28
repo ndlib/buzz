@@ -5,7 +5,7 @@ pg_settings: &pg_settings
   pool: 5
 
 local_user: &local_user
-  username: root
+  username: postgres
   password: password
 
 development:
