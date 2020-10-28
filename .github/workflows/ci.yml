@@ -1,0 +1,66 @@
+name: Ruby CI
+
+on:
+  push:
+    branches: [ main, ESU-1478 ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+          image: postgres:9.4.26
+          env:
+            POSTGRES_PASSWORD: password
+          ports:
+            - 5432:5432
+          options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    strategy:
+      matrix:
+        ruby: [ '2.3.1' ]
+
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Ruby
+    # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
+    # change this to (see https://github.com/ruby/setup-ruby#versioning):
+    # uses: ruby/setup-ruby@v1
+      uses: ruby/setup-ruby@ec106b438a1ff6ff109590de34ddc62c540232e0
+      with:
+        ruby-version: ${{ matrix.ruby }}
+
+    - name: Update gems
+      run: yes | gem update --system --force
+
+    - name: Set up Bundler
+      run: gem install bundler:1.17.3
+
+    - name: Install dependencies
+      run: bundle install
+
+    - name: Create database and secrets files from example files
+      run: |
+        cp config/database_example.yml config/database.yml
+        cp config/secrets.example.yml config/secrets.yml
+
+    - name: Create and configure Postgres database
+      env:
+        PGHOST: localhost
+        PGUSER: postgres
+        PGPASSWORD: password
+      run: |
+        psql -c 'create database buzz_test' -U postgres
+        psql -c 'create role root superuser createdb createrole inherit login replication' -U postgres
+
+    - name: Run rake script
+      run: RAILS_ENV=test bundle exec rake --trace db:migrate test
+
+    - name: Run script
+      run: bundle exec rspec spec
+    
+
+
