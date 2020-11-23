@@ -36,6 +36,6 @@ WORKDIR $APP_HOME
 #ENV RAILS_ENV=production
 
 RUN chmod u+x docker/entry.sh docker/start_services.sh
-ENTRYPOINT ["bash", "docker/entry.sh"]
+# ENTRYPOINT ["bash", "docker/entry.sh"]
 # By default, start the required services
 CMD docker/start_services.sh
