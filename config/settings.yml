@@ -9,6 +9,15 @@ defaults: &defaults
     cache_source: testlibnd-wse-honeycomb-pprd
     #cache_source: honeycomb-media-wse-library-nd-edu
 
+from_env: &from_env
+  wowza:
+    host: <%= ENV["WOWZA_HOST"] %>
+    port: <%= ENV["WOWZA_PORT"] %>
+    application: <%= ENV["WOWZA_APPLICATION"] %>
+    instance: <%= ENV["WOWZA_INSTANCE"] %>
+    cache_source_prefix: <%= ENV["WOWZA_CACHE_PREFIX"] %>
+    cache_source: <%= ENV["WOWZA_CACHE_SOURCE"] %>
+
 local: &local
   <<: *defaults
 
@@ -22,21 +31,7 @@ test:
   <<: *local
 
 pre_production:
-  <<: *deploy
-  wowza:
-    host: wowza.library.nd.edu
-    port: 443
-    application: buzz_wow
-    instance: _definst_
-    cache_source_prefix: amazons3
-    cache_source: testlibnd-wse-honeycomb-pprd
+  <<: *from_env
 
 production:
-  <<: *deploy
-  wowza:
-    host: wowza.library.nd.edu
-    port: 443
-    application: buzz_wow
-    instance: _definst_
-    cache_source_prefix: amazons3
-    cache_source: honeycomb-media-wse-library-nd-edu
+  <<: *from_env

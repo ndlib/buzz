@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+  rails:
+    image: rails
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - 80:80
+    environment:
+      SSL: "false"
+      DEFAULT_URL_HOST: localhost
+      DEFAULT_URL_PROTOCOL: http
+      RAILS_ENV: production
+      RAILS_LOG_TO_STDOUT: "true"
+      RAILS_LOG_AUTOFLUSH: "true"
+      RAILS_LOG_LEVEL: DEBUG
+      # Do not use this value in actual production env
+      RAILS_SECRET_KEY_BASE: e08359113980fceb3b62152286866deac83789900db39acd16712910259d904089a53ebebf614db39844ddd467f004ae426424095083b447d9173c0ee6041de2
+      RDS_HOSTNAME: postgres
+      RDS_USERNAME: postgres
+      RDS_PASSWORD: p0stgr3s
+      RDS_DB_NAME: postgres
+      RDS_PORT: 5432
+      WOWZA_HOST: wowza.library.nd.edu
+      WOWZA_PORT: 443
+      WOWZA_APPLICATION: buzz_wow
+      WOWZA_INSTANCE: _definst_
+      WOWZA_CACHE_PREFIX: amazons3
+      WOWZA_CACHE_SOURCE: testlibnd-wse-honeycomb-pprd
+  postgres:
+    image: postgres:9.5.4
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: p0stgr3s

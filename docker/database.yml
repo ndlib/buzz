@@ -1,0 +1,22 @@
+pg_settings: &pg_settings
+  adapter: postgresql
+  encoding: utf8
+  reconnect: true
+  pool: 5
+
+from_env: &from_env
+  <<: *pg_settings
+  username: <%= ENV["RDS_USERNAME"] %>
+  password: <%= ENV["RDS_PASSWORD"] %>
+  host:     <%= ENV["RDS_HOSTNAME"] %>
+  database: <%= ENV["RDS_DB_NAME"] %>
+  port:     <%= ENV["RDS_PORT"] %>
+
+development:
+  <<: *from_env
+
+pre_production:
+  <<: *from_env
+
+production:
+  <<: *from_env

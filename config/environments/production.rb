@@ -76,8 +76,11 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+  host = ENV['DEFAULT_URL_HOST'] || "buzz.library.nd.edu"
+  protocol = ENV['DEFAULT_URL_PROTOCOL'] || "https"
   Rails.application.routes.default_url_options = {
-    host: "buzz.library.nd.edu",
-    protocol: "https"
+    host: host,
+    protocol: protocol
   }
+  puts Rails.application.routes.default_url_options
 end
