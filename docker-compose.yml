@@ -18,11 +18,11 @@ services:
       RAILS_LOG_LEVEL: DEBUG
       # Do not use this value in actual production env
       RAILS_SECRET_KEY_BASE: e08359113980fceb3b62152286866deac83789900db39acd16712910259d904089a53ebebf614db39844ddd467f004ae426424095083b447d9173c0ee6041de2
-      RDS_HOSTNAME: postgres
-      RDS_USERNAME: postgres
-      RDS_PASSWORD: p0stgr3s
-      RDS_DB_NAME: postgres
-      RDS_PORT: 5432
+      DB_HOSTNAME: postgres
+      DB_USERNAME: postgres
+      DB_PASSWORD: p0stgr3s
+      DB_NAME: postgres
+      DB_PORT: 5432
       WOWZA_HOST: wowza.library.nd.edu
       WOWZA_PORT: 443
       WOWZA_APPLICATION: buzz_wow
