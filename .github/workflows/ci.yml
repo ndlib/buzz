@@ -2,9 +2,9 @@ name: Ruby CI
 
 on:
   push:
-    branches: [ main, ESU-1478 ]
+    branches-ignore: [ master ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   build:
