@@ -6,11 +6,11 @@ pg_settings: &pg_settings
 
 from_env: &from_env
   <<: *pg_settings
-  username: <%= ENV["RDS_USERNAME"] %>
-  password: <%= ENV["RDS_PASSWORD"] %>
-  host:     <%= ENV["RDS_HOSTNAME"] %>
-  database: <%= ENV["RDS_DB_NAME"] %>
-  port:     <%= ENV["RDS_PORT"] %>
+  username: <%= ENV["DB_USERNAME"] %>
+  password: <%= ENV["DB_PASSWORD"] %>
+  host:     <%= ENV["DB_HOSTNAME"] %>
+  database: <%= ENV["DB_NAME"] %>
+  port:     <%= ENV["DB_PORT"] %>
 
 development:
   <<: *from_env
