@@ -3,13 +3,7 @@
   "values": [
     {
       "key": "app-host",
-      "value": "localhost",
-      "type": "text",
-      "enabled": true
-    },
-    {
-      "key": "host-protocol",
-      "value": "http",
+      "value": "http://localhost",
       "type": "text",
       "enabled": true
     }
