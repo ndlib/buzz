@@ -42,9 +42,9 @@
 					"raw": "{\n  \"file_path\": \"testing/sample1.mp4\",\n  \"media_type\": \"video\"\n}"
 				},
 				"url": {
-					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files",
+					"raw": "{{app-host}}/v1/media_files",
 					"host": [
-						"{{host-protocol}}://{{app-host}}"
+						"{{app-host}}"
 					],
 					"path": [
 						"v1",
@@ -86,9 +86,9 @@
 					"raw": "{\n  \"file_path\": \"testing/sample1.mp4\",\n  \"media_type\": \"video\"\n}"
 				},
 				"url": {
-					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files/{{create_video_id}}",
+					"raw": "{{app-host}}/v1/media_files/{{create_video_id}}",
 					"host": [
-						"{{host-protocol}}://{{app-host}}"
+						"{{app-host}}"
 					],
 					"path": [
 						"v1",
@@ -139,9 +139,9 @@
 					"raw": "{\n  \"file_path\": \"big_full.mov\",\n  \"media_type\": \"audio\",\n  \"thumbnail_url\": \"testurl\"\n}"
 				},
 				"url": {
-					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files/{{create_video_id}}",
+					"raw": "{{app-host}}/v1/media_files/{{create_video_id}}",
 					"host": [
-						"{{host-protocol}}://{{app-host}}"
+						"{{app-host}}"
 					],
 					"path": [
 						"v1",
@@ -189,9 +189,9 @@
 					"raw": "{\n  \"application\": \"honeycomb\",\n  \"file_path\": \"https://s3.amazonaws.com/honeycomb-media-dev.library.nd.edu/videos/videos/000/010/897/original/sample1.mp4\",\n  \"media_type\": \"audio\"\n}"
 				},
 				"url": {
-					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files",
+					"raw": "{{app-host}}/v1/media_files",
 					"host": [
-						"{{host-protocol}}://{{app-host}}"
+						"{{app-host}}"
 					],
 					"path": [
 						"v1",
@@ -233,9 +233,9 @@
 					"raw": "{\n  \"file_path\": \"big_full.mp3\",\n  \"media_type\": \"audio\"\n}"
 				},
 				"url": {
-					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files/{{create_audio_id}}",
+					"raw": "{{app-host}}/v1/media_files/{{create_audio_id}}",
 					"host": [
-						"{{host-protocol}}://{{app-host}}"
+						"{{app-host}}"
 					],
 					"path": [
 						"v1",
@@ -286,9 +286,9 @@
 					"raw": "{\n  \"file_path\": \"big_full.mov\",\n  \"media_type\": \"audio\",\n  \"thumbnail_url\": \"testurl\"\n}"
 				},
 				"url": {
-					"raw": "{{host-protocol}}://{{app-host}}/v1/media_files/{{create_audio_id}}",
+					"raw": "{{app-host}}/v1/media_files/{{create_audio_id}}",
 					"host": [
-						"{{host-protocol}}://{{app-host}}"
+						"{{app-host}}"
 					],
 					"path": [
 						"v1",

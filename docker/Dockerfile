@@ -25,8 +25,7 @@ COPY . $APP_HOME
 WORKDIR $APP_HOME
 
 COPY docker/database.yml $APP_HOME/config/database.yml
+COPY docker/rails_entry.sh $APP_HOME/rails_entry.sh
+COPY docker/rails_migrate.sh $APP_HOME/rails_migrate.sh
 
-RUN chmod u+x docker/start_services.sh
-# ENTRYPOINT ["bash", "docker/entry.sh"]
-# By default, start the required services
-CMD docker/start_services.sh
+ENTRYPOINT ["bash", "rails_entry.sh"]
